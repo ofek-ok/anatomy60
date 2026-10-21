@@ -5,5 +5,14 @@
   "server": {
     "url": "https://anatomy60.vercel.app",
     "cleartext": false
+  },
+  "android": {
+    "backgroundColor": "#F8F6F2",
+    "allowMixedContent": false
+  },
+  "ios": {
+    "backgroundColor": "#F8F6F2",
+    "contentInset": "automatic",
+    "preferredContentMode": "mobile"
   }
 }

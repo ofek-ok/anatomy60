@@ -2,293 +2,319 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#F8F6F2" />
-  <meta name="description" content="AnatoMe — Medical precision meets cozy gaming. An interactive, complete human anatomy reference for doctors and students." />
-  <title>AnatoMe — Medical Precision meets Cozy Gaming</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="description" content="AnatoMe — Mobile 3D anatomy reference and interactive kinesiology." />
+  <title>AnatoMe — Mobile 3D Anatomy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/styles.css" />
 </head>
-<body>
-  <aside class="sidebar">
-    <a class="brand" href="#home" aria-label="AnatoMe home">
-      <img src="/assets/anatome-logo.jpg" alt="AnatoMe mascot" class="brand-mascot" />
-      <div class="brand-copy">
-        <span class="brand-title">Anato<b class="brand-accent">Me</b></span>
-        <small class="brand-sub">COZY ANATOMY · DAY <span id="side-day">1</span>/60</small>
+<body class="mobile-app">
+  <!-- MOBILE STATUS & BRAND HEADER -->
+  <header class="mobile-topbar">
+    <div class="mobile-brand-group">
+      <img src="/assets/anatome-logo.jpg" alt="AnatoMe mascot" class="mobile-avatar" />
+      <div class="brand-text-wrap">
+        <span class="mobile-brand-name">Anato<b class="brand-accent">Me</b></span>
+        <span class="mobile-day-label">DAY <span id="top-day-num">1</span> OF 60</span>
       </div>
-    </a>
-    <div class="streak-pill">
-      <span class="pill-spark">✦</span>
-      <strong id="side-xp">0</strong>
-      <small>XP</small>
     </div>
-    <nav class="nav" aria-label="Main navigation">
-      <button class="nav-link active" data-view="home"><span>⌂</span><span>Home</span></button>
-      <button class="nav-link" data-view="learn"><span>▤</span><span>Curriculum</span></button>
-      <button class="nav-link" data-view="explore"><span>◉</span><span>3D Atlas & Diorama</span></button>
-      <button class="nav-link" data-view="profile"><span>♙</span><span>Learner Profile</span></button>
-    </nav>
-    <div class="sidebar-bottom">
-      <div class="pro-badge">
-        <span class="pro-dot"></span>
-        <span class="pro-text">COMPLETE MEDICAL REFERENCE</span>
-      </div>
-      <p class="pro-sub">206 Bones · 640 Skeletal Muscles</p>
+    <div class="mobile-top-stats">
+      <div class="streak-badge"><span class="flame-icon">✦</span> <b id="top-xp">0</b> <small>XP</small></div>
     </div>
-  </aside>
+  </header>
 
-  <main class="main-wrap">
-    <header class="topbar">
-      <div class="mobile-brand">
-        <img src="/assets/anatome-logo.jpg" alt="AnatoMe" class="mobile-mascot" />
-        <span>Anato<b>Me</b></span>
+  <!-- MAIN SCROLLABLE APP SCREEN -->
+  <main class="app-screen" id="app-screen">
+    <!-- VIEW: HOME (DAILY CLINICAL FEED) -->
+    <section id="view-home" class="mobile-view active">
+      <div class="mobile-header-card">
+        <div class="header-card-copy">
+          <p class="eyebrow">DAILY CLINICAL PRACTICE</p>
+          <h1>Learn the Body.</h1>
+          <p class="intro">100% complete musculoskeletal precision with a cozy, tactile game feel.</p>
+        </div>
+        <div class="day-ring">
+          <span>DAY</span>
+          <b id="day-badge-num">01</b>
+          <small>/ 60</small>
+        </div>
       </div>
-      <div class="topbar-right">
-        <span class="top-xp">✦ <b id="top-xp">0</b> XP</span>
-        <button class="mobile-menu" id="mobile-menu" aria-label="Open navigation">☰</button>
-      </div>
-    </header>
 
-    <div id="app" class="content">
-      <!-- VIEW: HOME -->
-      <section id="view-home" class="view">
-        <div class="welcome-row">
-          <div>
-            <p class="eyebrow">MEDICAL PRECISION · COZY GAMING</p>
-            <h1>Welcome to AnatoMe.</h1>
-            <p class="intro">A joyful, 100% complete human anatomy map for medical students, doctors, and clinicians. Warm toy-like aesthetics with rigorous anatomical precision.</p>
-          </div>
-          <div class="day-badge">
-            <span>DAY</span>
-            <b id="day-badge-num">01</b>
-            <small>OF 60</small>
-          </div>
+      <!-- DAILY LESSON CARD -->
+      <article class="mobile-card lesson-card">
+        <div class="card-kicker-row">
+          <span class="pill-kicker">▤ CLINICAL LESSON</span>
+          <span class="time-est">◷ ~20 MIN</span>
+        </div>
+        <h2 id="lesson-title">Anatomical Language & Planes</h2>
+        <p id="lesson-subtitle" class="card-desc">Anatomical position, directional terminology, and spatial axes.</p>
+        
+        <div class="progress-wrap">
+          <div class="mobile-progress-bar"><span id="lesson-progress-fill"></span></div>
+          <span id="lesson-progress-text" class="progress-label">0%</span>
         </div>
 
-        <article class="lesson-card">
-          <div class="card-top">
-            <div>
-              <p class="card-kicker"><span class="icon-book">▤</span> <span>DAILY CLINICAL LESSON</span></p>
-              <p class="card-day" id="lesson-day-label">Day 1 of 60</p>
-            </div>
-            <span class="time-est">◷ ~20 MIN</span>
-          </div>
-          <h2 id="lesson-title">Anatomical Language & Planes</h2>
-          <p id="lesson-subtitle" class="lesson-desc">Anatomical position, directional terminology, and spatial axes.</p>
-          <div class="lesson-footer">
-            <div class="lesson-progress"><span id="lesson-progress-fill"></span></div>
-            <span id="lesson-progress-text">0% complete</span>
-          </div>
-          <button class="button button-primary full-button" id="continue-button">
-            <span>CONTINUE LESSON</span>
-            <span>→</span>
-          </button>
-        </article>
+        <button class="mobile-btn btn-primary" id="continue-button">
+          <span>CONTINUE LESSON</span>
+          <span>→</span>
+        </button>
+      </article>
 
-        <article class="atlas-card">
-          <div class="atlas-card-copy">
-            <p class="card-kicker"><span class="icon-compass">◉</span> <span>TACTILE DIORAMA ATLAS</span></p>
-            <span class="atlas-meta">206 BONES · 640 MUSCLES · PEELABLE LAYERS</span>
-            <h2>Explore the 3D Musculoskeletal Map</h2>
-            <p>Peel through skin, superficial movers, deep stabilizers, and the skeleton. Tap any landmark to inspect exact Origins (Mint) and Insertions (Butter Yellow).</p>
-            <button class="button button-peach full-button" data-goto="explore">
-              <span>OPEN DIORAMA ATLAS</span>
-              <span>↗</span>
+      <!-- DIORAMA BANNER CARD -->
+      <article class="mobile-card diorama-banner-card" data-goto="explore">
+        <div class="banner-content">
+          <span class="pill-kicker peach">◉ 3D DIORAMA ATLAS</span>
+          <h2>Explore the Body Map</h2>
+          <p>Peel through skin, superficial movers, deep stabilizers, and the skeleton.</p>
+          <div class="banner-action-link">
+            <span>Open Diorama</span>
+            <span>↗</span>
+          </div>
+        </div>
+        <div class="banner-mascot-wrap">
+          <img src="/assets/anatome-logo.jpg" alt="Mascot" class="banner-mascot-img" />
+        </div>
+      </article>
+
+      <!-- STATS STRIP -->
+      <div class="mobile-stats-grid">
+        <div class="mini-stat-card">
+          <span class="mini-stat-icon flame">✦</span>
+          <div><b id="streak-count">0</b><small>STREAK</small></div>
+        </div>
+        <div class="mini-stat-card">
+          <span class="mini-stat-icon heart">♥</span>
+          <div><b id="mastered-count">0</b><small>MASTERED</small></div>
+        </div>
+        <div class="mini-stat-card">
+          <span class="mini-stat-icon clock">◷</span>
+          <div><b><span id="days-count">0</span>/60</b><small>DAYS</small></div>
+        </div>
+      </div>
+
+      <!-- 7-DAY CADENCE -->
+      <div class="mobile-section">
+        <div class="section-title-row">
+          <h2>Weekly Cadence</h2>
+          <span class="muted">7 DAYS</span>
+        </div>
+        <div class="week-strip" id="week-strip"></div>
+      </div>
+    </section>
+
+    <!-- VIEW: CURRICULUM (60-DAY JOURNEY) -->
+    <section id="view-learn" class="mobile-view hidden">
+      <div class="view-header">
+        <p class="eyebrow">CLINICAL ROADMAP</p>
+        <h1>60-Day Curriculum.</h1>
+        <p class="intro">Structured functional kinetic chains from bone landmarks to multi-joint synergies.</p>
+      </div>
+
+      <div class="mobile-card journey-summary-card">
+        <div class="summary-top">
+          <span>OVERALL PROGRESS</span>
+          <b><span id="journey-days">0</span> / 60 DAYS</b>
+        </div>
+        <div class="mobile-progress-bar"><span id="journey-progress-fill"></span></div>
+        <div class="summary-bottom">
+          <span id="journey-percent">0% Completed</span>
+          <span class="pro-tag">TA2 / Z-Anatomy</span>
+        </div>
+      </div>
+
+      <div id="journey-list" class="mobile-journey-list"></div>
+    </section>
+
+    <!-- VIEW: 3D DIORAMA & INTERACTIVE ATLAS -->
+    <section id="view-explore" class="mobile-view hidden">
+      <!-- TOP VIEW SWITCHER -->
+      <div class="diorama-switch-row">
+        <div class="tab-pill">
+          <button class="pill-btn selected" data-viewbody="front">ANTERIOR</button>
+          <button class="pill-btn" data-viewbody="back">POSTERIOR</button>
+        </div>
+      </div>
+
+      <!-- 3D DIORAMA CANVAS STAGE -->
+      <div class="mobile-diorama-stage">
+        <!-- CHUNKY THUMB PEEL SLIDER -->
+        <div class="thumb-peel-slider">
+          <span class="peel-tag">PEEL</span>
+          <div class="peel-track">
+            <button class="peel-thumb-btn selected" data-layer="3" title="Skin">
+              <span class="thumb-icon">👤</span>
+              <small>Skin</small>
+            </button>
+            <button class="peel-thumb-btn" data-layer="2" title="Superficial">
+              <span class="thumb-icon">🌸</span>
+              <small>Super</small>
+            </button>
+            <button class="peel-thumb-btn" data-layer="1" title="Deep">
+              <span class="thumb-icon">🍁</span>
+              <small>Deep</small>
+            </button>
+            <button class="peel-thumb-btn" data-layer="0" title="Skeleton">
+              <span class="thumb-icon">🦴</span>
+              <small>Bone</small>
             </button>
           </div>
-          <div class="mini-mascot-card">
-            <img src="/assets/anatome-logo.jpg" alt="Mascot" class="mini-mascot-img" />
-            <span class="mascot-bubble">Let's study!</span>
-          </div>
-        </article>
-
-        <section class="stats-row">
-          <div class="stat"><span class="stat-icon flame">✦</span><div><b id="streak-count">0</b><small>DAY STREAK</small></div></div>
-          <div class="stat"><span class="stat-icon heart">♥</span><div><b id="mastered-count">0</b><small>MASTERED</small></div></div>
-          <div class="stat"><span class="stat-icon clock">◷</span><div><b><span id="days-count">0</span> / 60</b><small>DAYS COMPLETE</small></div></div>
-        </section>
-
-        <section class="week-section">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">WEEKLY RHYTHM</p>
-              <h2>Your Study Cadence</h2>
-            </div>
-            <span class="muted">7 DAY OVERVIEW</span>
-          </div>
-          <div class="week-strip" id="week-strip"></div>
-        </section>
-      </section>
-
-      <!-- VIEW: LEARN / CURRICULUM -->
-      <section id="view-learn" class="view hidden">
-        <div class="page-heading">
-          <p class="eyebrow">THE 60-DAY CLINICAL CURRICULUM</p>
-          <h1>Medical Precision, One Day at a Time.</h1>
-          <p class="intro">Structured by functional kinetic chains—from skeletal landmarks to complex muscle synergies and clinical diagnostics.</p>
         </div>
-        <div class="journey-summary">
+
+        <!-- 3D FIGURE DIORAMA -->
+        <div class="body-figure" id="figure-wrap">
+          <div class="diorama-pedestal"></div>
+          <svg viewBox="0 0 280 480" class="human-svg" role="img" aria-label="Human anatomy diorama">
+            <!-- Skeletal Base (Layer 0) -->
+            <g class="layer-skeleton">
+              <circle class="bone skull" cx="140" cy="49" r="33"/>
+              <path class="bone spine-ribs" d="M111 88 Q140 76 169 88 L185 168 L176 211 L168 269 L180 432 Q164 448 149 436 L140 292 L130 436 Q112 448 98 432 L112 269 L104 211 L95 168Z"/>
+              <path class="bone limbs" d="M103 100 L67 190 L40 296 Q46 309 58 301 L99 217 M177 100 L213 190 L240 296 Q234 309 222 301 L181 217"/>
+              <path class="bone-line" d="M140 96V245 M108 149H172 M113 260H167 M140 291L116 431 M140 291L164 431"/>
+            </g>
+            <!-- Deep Muscles (Layer 1) -->
+            <g class="layer-deep">
+              <path class="muscle deep-rotator" d="M116 110 Q98 116 102 138 L114 148 L128 139 L126 112Z"/>
+              <path class="muscle deep-rotator" d="M164 110 Q182 116 178 138 L166 148 L152 139 L154 112Z"/>
+              <path class="muscle deep-core" d="M118 165 Q140 158 162 165 L158 222 Q140 234 122 222Z"/>
+            </g>
+            <!-- Superficial Muscles (Layer 2) -->
+            <g class="layer-superficial">
+              <path class="muscle deltoid" d="M109 100 Q88 105 95 132 L113 149 L132 138 L130 105Z"/>
+              <path class="muscle deltoid" d="M171 100 Q192 105 185 132 L167 149 L148 138 L150 105Z"/>
+              <path class="muscle pectoralis" d="M112 155 Q140 147 168 155 L163 230 Q140 244 117 230Z"/>
+              <path class="muscle biceps" d="M99 108 Q79 111 73 162 L64 205 L78 212 L99 169 L108 133Z"/>
+              <path class="muscle biceps" d="M181 108 Q201 111 207 162 L216 205 L202 212 L181 169 L172 133Z"/>
+              <path class="muscle glute-quad" d="M119 247 Q140 256 161 247 L157 301 L140 309 L123 301Z"/>
+              <path class="muscle calf" d="M122 312 L138 316 L130 415 L109 422 L113 354Z"/>
+              <path class="muscle calf" d="M158 312 L142 316 L150 415 L171 422 L167 354Z"/>
+            </g>
+            <!-- Skin Outline (Layer 3) -->
+            <path class="skin-outline" d="M140 14 Q177 14 177 49 Q177 84 195 98 L244 290 Q240 314 220 305 L186 225 L182 435 Q164 455 145 440 L140 310 L135 440 Q116 455 98 435 L94 225 L60 305 Q40 314 36 290 L85 98 Q103 84 103 49 Q103 14 140 14Z"/>
+          </svg>
+
+          <!-- Interactive Touch Pins -->
+          <button class="mobile-pin pin-shoulder" data-region="shoulders" aria-label="Shoulder"></button>
+          <button class="mobile-pin pin-chest" data-region="chest" aria-label="Chest"></button>
+          <button class="mobile-pin pin-arm" data-region="arms" aria-label="Arms"></button>
+          <button class="mobile-pin pin-core" data-region="core" aria-label="Core"></button>
+          <button class="mobile-pin pin-legs" data-region="legs" aria-label="Legs"></button>
+          <span class="diorama-view-label" id="figure-caption">ANTERIOR VIEW</span>
+        </div>
+      </div>
+
+      <!-- COMPACT COLOR LEGEND -->
+      <div class="mobile-legend">
+        <span><i class="dot mint"></i>Origin (Mint)</span>
+        <span><i class="dot yellow"></i>Insertion (Yellow)</span>
+        <span><i class="dot peach"></i>Muscles</span>
+        <span><i class="dot bone"></i>Skeleton</span>
+      </div>
+
+      <!-- ERGONOMIC SLIDE-UP BOTTOM SHEET (INSPECTION DRAWER) -->
+      <div class="bottom-sheet" id="bottom-sheet">
+        <div class="sheet-handle-bar" id="sheet-handle">
+          <div class="sheet-handle"></div>
+        </div>
+        <div class="sheet-header">
           <div>
-            <span class="summary-label">PROGRESS</span>
-            <b><span id="journey-days">0</span><small> / 60 DAYS</small></b>
-          </div>
-          <div class="journey-progress"><span id="journey-progress-fill"></span></div>
-          <span class="summary-percent" id="journey-percent">0%</span>
-        </div>
-        <div id="journey-list" class="journey-list"></div>
-      </section>
-
-      <!-- VIEW: EXPLORE / 3D DIORAMA ATLAS -->
-      <section id="view-explore" class="view hidden">
-        <div class="page-heading">
-          <p class="eyebrow">INTERACTIVE MUSCULOSKELETAL DIORAMA</p>
-          <h1>Interactive Anatomy Diorama.</h1>
-          <p class="intro">Peel through anatomical layers, isolate kinetic chains, and inspect Origin (Mint) and Insertion (Butter Yellow) attachment points with medical precision.</p>
-        </div>
-
-        <div class="explore-layout">
-          <div class="body-stage">
-            <div class="stage-top-controls">
-              <div class="body-tabs">
-                <button class="body-tab selected" data-viewbody="front">ANTERIOR (FRONT)</button>
-                <button class="body-tab" data-viewbody="back">POSTERIOR (BACK)</button>
-              </div>
-            </div>
-
-            <div class="diorama-container">
-              <!-- CHUNKY VERTICAL PEEL SLIDER -->
-              <div class="peel-slider-wrap" title="Peel anatomical layers">
-                <span class="peel-label">PEEL</span>
-                <div class="peel-steps">
-                  <button class="peel-step selected" data-layer="3" title="Layer 3: Skin Silhouette">
-                    <span class="step-icon">👤</span>
-                    <small>Skin</small>
-                  </button>
-                  <button class="peel-step" data-layer="2" title="Layer 2: Superficial Muscles">
-                    <span class="step-icon">🌸</span>
-                    <small>Superficial</small>
-                  </button>
-                  <button class="peel-step" data-layer="1" title="Layer 1: Deep Muscles">
-                    <span class="step-icon">🍁</span>
-                    <small>Deep</small>
-                  </button>
-                  <button class="peel-step" data-layer="0" title="Layer 0: Complete Skeleton">
-                    <span class="step-icon">🦴</span>
-                    <small>Skeleton</small>
-                  </button>
-                </div>
-              </div>
-
-              <!-- 3D FIGURE DIORAMA -->
-              <div class="body-figure" id="figure-wrap">
-                <div class="diorama-pedestal"></div>
-                <svg viewBox="0 0 280 480" class="human-svg" role="img" aria-label="Interactive human anatomy diorama">
-                  <!-- Skeletal Base (Layer 0) -->
-                  <g class="layer-skeleton">
-                    <circle class="bone skull" cx="140" cy="49" r="33"/>
-                    <path class="bone spine-ribs" d="M111 88 Q140 76 169 88 L185 168 L176 211 L168 269 L180 432 Q164 448 149 436 L140 292 L130 436 Q112 448 98 432 L112 269 L104 211 L95 168Z"/>
-                    <path class="bone limbs" d="M103 100 L67 190 L40 296 Q46 309 58 301 L99 217 M177 100 L213 190 L240 296 Q234 309 222 301 L181 217"/>
-                    <path class="bone-line" d="M140 96V245 M108 149H172 M113 260H167 M140 291L116 431 M140 291L164 431"/>
-                  </g>
-                  <!-- Deep Muscles (Layer 1) -->
-                  <g class="layer-deep">
-                    <path class="muscle deep-rotator" d="M116 110 Q98 116 102 138 L114 148 L128 139 L126 112Z"/>
-                    <path class="muscle deep-rotator" d="M164 110 Q182 116 178 138 L166 148 L152 139 L154 112Z"/>
-                    <path class="muscle deep-core" d="M118 165 Q140 158 162 165 L158 222 Q140 234 122 222Z"/>
-                  </g>
-                  <!-- Superficial Muscles (Layer 2) -->
-                  <g class="layer-superficial">
-                    <path class="muscle deltoid" d="M109 100 Q88 105 95 132 L113 149 L132 138 L130 105Z"/>
-                    <path class="muscle deltoid" d="M171 100 Q192 105 185 132 L167 149 L148 138 L150 105Z"/>
-                    <path class="muscle pectoralis" d="M112 155 Q140 147 168 155 L163 230 Q140 244 117 230Z"/>
-                    <path class="muscle biceps" d="M99 108 Q79 111 73 162 L64 205 L78 212 L99 169 L108 133Z"/>
-                    <path class="muscle biceps" d="M181 108 Q201 111 207 162 L216 205 L202 212 L181 169 L172 133Z"/>
-                    <path class="muscle glute-quad" d="M119 247 Q140 256 161 247 L157 301 L140 309 L123 301Z"/>
-                    <path class="muscle calf" d="M122 312 L138 316 L130 415 L109 422 L113 354Z"/>
-                    <path class="muscle calf" d="M158 312 L142 316 L150 415 L171 422 L167 354Z"/>
-                  </g>
-                  <!-- Skin Outline (Layer 3) -->
-                  <path class="skin-outline" d="M140 14 Q177 14 177 49 Q177 84 195 98 L244 290 Q240 314 220 305 L186 225 L182 435 Q164 455 145 440 L140 310 L135 440 Q116 455 98 435 L94 225 L60 305 Q40 314 36 290 L85 98 Q103 84 103 49 Q103 14 140 14Z"/>
-                </svg>
-
-                <!-- Interactive Region Pins -->
-                <button class="region-point point-shoulder" data-region="shoulders" aria-label="Shoulder Girdle"></button>
-                <button class="region-point point-chest" data-region="chest" aria-label="Chest & Thoracic Wall"></button>
-                <button class="region-point point-arm" data-region="arms" aria-label="Arm & Forearm"></button>
-                <button class="region-point point-core" data-region="core" aria-label="Core & Lumbar Spine"></button>
-                <button class="region-point point-legs" data-region="legs" aria-label="Thigh, Knee & Leg"></button>
-                <span class="figure-caption" id="figure-caption">ANTERIOR VIEW</span>
-              </div>
-            </div>
-
-            <div class="body-legend">
-              <span><i class="legend-pin origin"></i><span>Origin Anchor (Mint)</span></span>
-              <span><i class="legend-pin insertion"></i><span>Insertion Anchor (Yellow)</span></span>
-              <span><i class="legend-dot muscle-dot"></i><span>Muscle Bellies</span></span>
-              <span><i class="legend-dot bone-dot"></i><span>Skeletal Base</span></span>
-            </div>
-          </div>
-
-          <!-- REGION INSPECTION PANEL -->
-          <aside class="region-panel">
-            <div class="panel-eyebrow">ANATOMICAL REGION</div>
-            <h2 id="region-title">Select an Organ</h2>
+            <span class="sheet-eyebrow">ANATOMICAL INSPECTION</span>
+            <h2 id="region-title">Choose a Region</h2>
             <p id="region-latin" class="latin-nomenclature">Musculi & Skeleton</p>
-            <p id="region-description" class="region-description">Tap any highlighted pin on the diorama to inspect origins, insertions, kinesiological actions, and clinical innervation.</p>
-
-            <div class="action-buttons-row">
-              <button class="button button-action" id="action-play-btn">
-                <span>✦</span> <span>PLAY ACTION</span>
-              </button>
-              <button class="button button-isolate" id="action-isolate-btn">
-                <span>⊞</span> <span>ISOLATE</span>
-              </button>
-            </div>
-
-            <div id="region-content" class="region-content">
-              <div class="empty-hint">
-                <span class="hint-spark">✦</span>
-                <span>Select a region on the diorama to view complete origins, insertions, and kinesiology.</span>
-              </div>
-            </div>
-          </aside>
+          </div>
+          <button class="sheet-toggle-btn" id="sheet-toggle" aria-label="Toggle details">▼</button>
         </div>
-      </section>
 
-      <!-- VIEW: PROFILE -->
-      <section id="view-profile" class="view hidden">
-        <div class="page-heading">
-          <p class="eyebrow">STUDY PROFILE</p>
-          <h1>Your Anatomy Journey.</h1>
-          <p class="intro">Track your clinical mastery across all 60 days. All study metrics are preserved on this device.</p>
+        <!-- QUICK KINESIOLOGY ACTION BUTTONS -->
+        <div class="sheet-actions-row">
+          <button class="mobile-action-btn primary" id="action-play-btn">
+            <span>✦</span> <span>PLAY ACTION</span>
+          </button>
+          <button class="mobile-action-btn secondary" id="action-isolate-btn">
+            <span>⊞</span> <span>ISOLATE</span>
+          </button>
         </div>
-        <div class="profile-card">
-          <img src="/assets/anatome-logo.jpg" alt="AnatoMe avatar" class="profile-avatar" />
-          <div>
-            <p class="eyebrow">CLINICIAN IN TRAINING</p>
-            <h2>The 60-Day Mastery Plan</h2>
-            <p class="lesson-desc">Building a permanent mental map of human musculoskeletal structure.</p>
+
+        <div id="region-content" class="sheet-content">
+          <div class="empty-hint">
+            <span class="spark">✦</span>
+            <span>Tap any glowing pin on the body map to open clinical origins, insertions, and innervation.</span>
           </div>
         </div>
-        <div class="profile-stats">
-          <div class="profile-stat"><b id="profile-days">0</b><span>DAYS COMPLETE</span></div>
-          <div class="profile-stat"><b id="profile-xp">0</b><span>XP</span></div>
-          <div class="profile-stat"><b id="profile-streak">0</b><span>DAY STREAK</span></div>
-        </div>
-        <button class="button button-outline" id="reset-progress">RESET LOCAL PROGRESS</button>
-      </section>
-    </div>
+      </div>
+    </section>
 
-    <footer class="footer">
-      <span>AnatoMe — Medical Precision meets Cozy Gaming</span>
-      <span>Designed for doctors, therapists & medical students.</span>
-    </footer>
+    <!-- VIEW: PROFILE -->
+    <section id="view-profile" class="mobile-view hidden">
+      <div class="view-header">
+        <p class="eyebrow">LEARNER PROFILE</p>
+        <h1>Your Progress.</h1>
+        <p class="intro">100% complete musculoskeletal journey saved on this device.</p>
+      </div>
+
+      <div class="mobile-card profile-card">
+        <img src="/assets/anatome-logo.jpg" alt="Mascot Avatar" class="profile-avatar" />
+        <div class="profile-card-copy">
+          <span class="pro-tag">CLINICIAN EDITION</span>
+          <h2>The 60-Day Plan</h2>
+          <p class="lesson-desc">Daily focused kinetic chains.</p>
+        </div>
+      </div>
+
+      <div class="mobile-stats-grid">
+        <div class="mini-stat-card">
+          <b id="profile-days">0</b>
+          <small>DAYS DONE</small>
+        </div>
+        <div class="mini-stat-card">
+          <b id="profile-xp">0</b>
+          <small>XP</small>
+        </div>
+        <div class="mini-stat-card">
+          <b id="profile-streak">0</b>
+          <small>DAY STREAK</small>
+        </div>
+      </div>
+
+      <div class="profile-info-block">
+        <h3>Medical Reference Specs</h3>
+        <p>• <strong>Standard:</strong> Terminologia Anatomica 2 (TA2)</p>
+        <p>• <strong>Bones:</strong> 206 (Axial 80, Appendicular 126)</p>
+        <p>• <strong>Muscles:</strong> ~640 paired and midline structures</p>
+        <p>• <strong>Aesthetic Engine:</strong> URP Cozy Toon & Dithered Alpha</p>
+      </div>
+
+      <button class="mobile-btn btn-outline" id="reset-progress">RESET LOCAL PROGRESS</button>
+    </section>
   </main>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <!-- THUMB-FRIENDLY BOTTOM NAVIGATION BAR -->
+  <nav class="mobile-bottom-nav" aria-label="Bottom Navigation">
+    <button class="nav-tab active" data-view="home">
+      <span class="tab-icon">⌂</span>
+      <span class="tab-label">Home</span>
+    </button>
+    <button class="nav-tab" data-view="learn">
+      <span class="tab-icon">▤</span>
+      <span class="tab-label">Plan</span>
+    </button>
+    <button class="nav-tab" data-view="explore">
+      <span class="tab-icon">◉</span>
+      <span class="tab-label">Diorama</span>
+    </button>
+    <button class="nav-tab" data-view="profile">
+      <span class="tab-icon">♙</span>
+      <span class="tab-label">Profile</span>
+    </button>
+  </nav>
+
+  <div id="toast" class="mobile-toast" role="status" aria-live="polite"></div>
+
   <script src="/assets/anatomy-data.js"></script>
   <script src="/assets/app.js" defer></script>
 </body>

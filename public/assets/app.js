@@ -1,4 +1,4 @@
-// AnatoMe Interactive Engine — Pure English Medical Edition
+// AnatoMe Mobile Engine — Mobile-Only Architecture
 const titles = [
   "Anatomical Language & Planes", "The Skeletal Framework", "Joints & Kinesiology",
   "Muscle Foundations & Fiber Types", "The Shoulder Complex", "The Arm & Forearm",
@@ -25,9 +25,18 @@ const descriptions = [
   "Connecting anatomical landmarks into an intuitive, functional diagnostic map."
 ];
 
-// Audio Synthesizer (Cozy Marimba / Tactile Pop SFX via Web Audio API)
+// Cozy Tactile SFX + Mobile Haptics
 let audioCtx = null;
+function triggerHapticFeedback(pattern = [15]) {
+  try {
+    if (navigator.vibrate) navigator.vibrate(pattern);
+  } catch (e) {
+    // Unsupported or blocked
+  }
+}
+
 function playCozySound(type = 'pop') {
+  triggerHapticFeedback(type === 'chime' ? [20, 40, 20] : [12]);
   try {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -60,32 +69,33 @@ function playCozySound(type = 'pop') {
       });
     }
   } catch (e) {
-    // Fail silently if audio context not permitted
+    // Audio context suspended or muted
   }
 }
 
 // Persistent State
-const state = JSON.parse(localStorage.getItem('anatome-progress-v2') || '{"days":0,"xp":0,"streak":0,"lastDate":"","lessonProgress":0,"completed":[]}');
+const state = JSON.parse(localStorage.getItem('anatome-mobile-state') || '{"days":0,"xp":0,"streak":0,"lastDate":"","lessonProgress":0,"completed":[]}');
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
-let view = 'home';
+let currentView = 'home';
 let currentRegion = '';
 let currentLayer = 3;
 let isIsolated = false;
 let isPlayingAction = false;
+let sheetExpanded = true;
 
 function save() {
-  localStorage.setItem('anatome-progress-v2', JSON.stringify(state));
+  localStorage.setItem('anatome-mobile-state', JSON.stringify(state));
   renderStats();
 }
 
 function renderStats() {
   const day = Math.min(state.days + 1, 60);
-  ['#side-day', '#day-badge-num'].forEach(s => {
+  ['#top-day-num', '#day-badge-num'].forEach(s => {
     if ($(s)) $(s).textContent = s.includes('badge') ? String(day).padStart(2, '0') : day;
   });
-  ['#side-xp', '#top-xp', '#profile-xp'].forEach(s => {
+  ['#top-xp', '#profile-xp'].forEach(s => {
     if ($(s)) $(s).textContent = state.xp;
   });
   ['#streak-count', '#profile-streak'].forEach(s => {
@@ -94,18 +104,17 @@ function renderStats() {
   ['#days-count', '#journey-days', '#profile-days'].forEach(s => {
     if ($(s)) $(s).textContent = state.days;
   });
-  $('#mastered-count').textContent = state.completed.length;
-  $('#lesson-day-label').textContent = `Day ${day} of 60`;
+  if ($('#mastered-count')) $('#mastered-count').textContent = state.completed.length;
 
   const pct = state.lessonProgress;
-  $('#lesson-progress-fill').style.width = pct + '%';
-  $('#lesson-progress-text').textContent = `${pct}% complete`;
-  $('#journey-progress-fill').style.width = (state.days / 60 * 100) + '%';
-  $('#journey-percent').textContent = Math.round(state.days / 60 * 100) + '%';
+  if ($('#lesson-progress-fill')) $('#lesson-progress-fill').style.width = pct + '%';
+  if ($('#lesson-progress-text')) $('#lesson-progress-text').textContent = `${pct}%`;
+  if ($('#journey-progress-fill')) $('#journey-progress-fill').style.width = (state.days / 60 * 100) + '%';
+  if ($('#journey-percent')) $('#journey-percent').textContent = `${Math.round(state.days / 60 * 100)}% Complete`;
 
   const titleIdx = Math.min(state.days, titles.length - 1);
-  $('#lesson-title').textContent = titles[titleIdx];
-  $('#lesson-subtitle').textContent = descriptions[titleIdx];
+  if ($('#lesson-title')) $('#lesson-title').textContent = titles[titleIdx];
+  if ($('#lesson-subtitle')) $('#lesson-subtitle').textContent = descriptions[titleIdx];
 
   renderWeek();
   renderJourney();
@@ -113,7 +122,8 @@ function renderStats() {
 
 function renderWeek() {
   const el = $('#week-strip');
-  const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+  if (!el) return;
+  const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
   el.innerHTML = days.map((d, i) => {
     const isToday = i === new Date().getDay() - 1;
     const isDone = i < state.streak;
@@ -121,7 +131,6 @@ function renderWeek() {
       <div class="week-day ${isToday ? 'today' : ''} ${isDone ? 'done' : ''}">
         <span>${d}</span>
         <b>${isDone ? '✓' : i + 1}</b>
-        <small>${isToday ? 'TODAY' : 'DAY'}</small>
       </div>`;
   }).join('');
 }
@@ -147,73 +156,84 @@ function renderJourney() {
     const done = state.days >= n + 5;
     const current = state.days >= n - 1 && !done;
     return `
-      <article class="journey-unit ${current ? 'current' : ''}">
-        <div class="unit-number">${done ? '✓' : String(i + 1).padStart(2, '0')}</div>
-        <div class="unit-copy">
+      <div class="journey-item ${current ? 'current' : ''}" data-unit="${i}">
+        <div class="journey-num">${done ? '✓' : String(i + 1).padStart(2, '0')}</div>
+        <div class="journey-info">
           <h3>${u[0]}</h3>
           <p>${u[1]}</p>
         </div>
-        <span class="unit-status">${done ? 'COMPLETE' : current ? 'IN PROGRESS' : `DAYS ${n}–${n + 5}`}</span>
-        <button class="unit-action" data-unit="${i}">${current ? 'OPEN' : done ? 'REVIEW' : 'VIEW'}</button>
-      </article>`;
+        <span class="journey-badge">${done ? 'DONE' : current ? 'NOW' : `D${n}–${n + 5}`}</span>
+      </div>`;
   }).join('');
 
-  list.querySelectorAll('[data-unit]').forEach(b => b.onclick = () => {
+  list.querySelectorAll('.journey-item').forEach(b => b.onclick = () => {
     playCozySound('pop');
     if (+b.dataset.unit === 0 || +b.dataset.unit <= Math.floor(state.days / 6)) {
-      go('home');
+      goToTab('home');
       $('#continue-button').focus();
     } else {
-      toast('Complete your current unit to unlock the next one.');
+      toast('Complete current unit to unlock the next one.');
     }
   });
 }
 
-function go(next) {
+// Thumb Bottom Navigation Controller
+function goToTab(tabName) {
   playCozySound('pop');
-  view = next;
-  $$('.view').forEach(v => v.classList.toggle('hidden', v.id !== `view-${next}`));
-  $$('.nav-link').forEach(b => b.classList.toggle('active', b.dataset.view === next));
-  if (next === 'explore') {
-    $('#region-title').textContent = currentRegion ? regionNames[currentRegion] : 'Select an Organ';
-  }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  currentView = tabName;
+  $$('.mobile-view').forEach(v => {
+    const isTarget = v.id === `view-${tabName}`;
+    v.classList.toggle('active', isTarget);
+    v.classList.toggle('hidden', !isTarget);
+  });
+  $$('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.view === tabName));
+
+  // Scroll to top of app screen
+  const appScreen = $('#app-screen');
+  if (appScreen) appScreen.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function toast(t) {
+$$('.nav-tab').forEach(b => b.onclick = () => goToTab(b.dataset.view));
+$$('[data-goto]').forEach(b => b.onclick = () => goToTab(b.dataset.goto));
+
+// Toast Notification
+function toast(msg) {
   const el = $('#toast');
-  el.textContent = t;
+  if (!el) return;
+  el.textContent = msg;
   el.classList.add('show');
   clearTimeout(window.toastTimer);
-  window.toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+  window.toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
 }
 
-$$('.nav-link').forEach(b => b.onclick = () => go(b.dataset.view));
-$$('[data-goto]').forEach(b => b.onclick = () => go(b.dataset.goto));
-
-$('#continue-button').onclick = () => {
-  playCozySound('pop');
-  if (state.lessonProgress < 100) {
-    state.lessonProgress = Math.min(100, state.lessonProgress + 25);
-    if (state.lessonProgress === 100) {
-      playCozySound('chime');
-      const today = new Date().toISOString().slice(0, 10);
-      if (!state.completed.includes(state.days)) {
-        state.completed.push(state.days);
-        state.days = Math.min(60, state.days + 1);
-        state.xp += 25;
-        state.streak = state.lastDate === today ? state.streak : state.streak + 1;
-        state.lastDate = today;
-        state.lessonProgress = 0;
+// Lesson Continue Button
+const contBtn = $('#continue-button');
+if (contBtn) {
+  contBtn.onclick = () => {
+    playCozySound('pop');
+    if (state.lessonProgress < 100) {
+      state.lessonProgress = Math.min(100, state.lessonProgress + 25);
+      if (state.lessonProgress === 100) {
+        playCozySound('chime');
+        const today = new Date().toISOString().slice(0, 10);
+        if (!state.completed.includes(state.days)) {
+          state.completed.push(state.days);
+          state.days = Math.min(60, state.days + 1);
+          state.xp += 25;
+          state.streak = state.lastDate === today ? state.streak : state.streak + 1;
+          state.lastDate = today;
+          state.lessonProgress = 0;
+        }
+        toast('✦ Lesson complete! +25 XP');
+      } else {
+        toast(`Lesson progress: ${state.lessonProgress}%`);
       }
-      toast('✦ Lesson complete! Fantastic work, +25 XP!');
-    } else {
-      toast(`Lesson progress: ${state.lessonProgress}%`);
+      save();
     }
-    save();
-  }
-};
+  };
+}
 
+// Medical Region Mapping
 const regionNames = {
   shoulders: "Shoulder Girdle & Rotator Cuff",
   chest: "Chest & Thoracic Wall",
@@ -238,7 +258,6 @@ function selectRegion(key) {
 
   $('#region-title').textContent = regionNames[key];
   $('#region-latin').textContent = muscles[0] ? muscles[0].latin : "Systema Musculoskeletale";
-  $('#region-description').textContent = `Clinical region containing ${muscles.length} primary muscles and their articulated skeletal attachments.`;
 
   let contentHTML = '';
   muscles.forEach(m => {
@@ -246,7 +265,7 @@ function selectRegion(key) {
       <div class="detail-group">
         <h3 style="display:flex; justify-content:space-between; align-items:center;">
           <span>${m.english.toUpperCase()}</span>
-          <span style="font-size:9px; background:#F0ECE6; padding:2px 8px; border-radius:10px; color:#5B7BA6;">Layer ${m.layer} (${m.layer === 1 ? 'Deep' : 'Superficial'})</span>
+          <span style="font-size:9px; background:#F0ECE6; padding:2px 8px; border-radius:10px; color:#5B7BA6;">Layer ${m.layer}</span>
         </h3>
         <p style="font-family:'Lora',serif; font-style:italic; font-size:12px; color:#5B7BA6; margin:0 0 6px;">${m.latin}</p>
         <div class="anchor-chip origin">● Origin: ${m.origin}</div>
@@ -254,42 +273,49 @@ function selectRegion(key) {
         <div style="margin-top:6px;">
           ${m.actions.map(a => `<span class="structure-chip">${a}</span>`).join('')}
         </div>
-        <p style="font-size:11px; color:#7E8494; margin:6px 0 0;"><strong>Innervation:</strong> ${m.innervation}</p>
+        <p style="font-size:11px; color:#7E8494; margin:4px 0 0;"><strong>Innervation:</strong> ${m.innervation}</p>
       </div>
-      <hr style="border:0; border-top:1px dashed #EBE6DF; margin:14px 0;">
+      <hr style="border:0; border-top:1px dashed #EBE6DF; margin:10px 0;">
     `;
   });
 
   $('#region-content').innerHTML = contentHTML;
-  $$('.region-point').forEach(p => p.classList.toggle('selected', p.dataset.region === key));
+  $$('.mobile-pin').forEach(p => p.classList.toggle('selected', p.dataset.region === key));
+
+  // Expand bottom sheet if collapsed
+  const sheet = $('#bottom-sheet');
+  if (sheet) {
+    sheet.style.display = 'block';
+    sheet.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }
 }
 
-$$('.region-point').forEach(b => b.onclick = () => selectRegion(b.dataset.region));
+$$('.mobile-pin').forEach(b => b.onclick = () => selectRegion(b.dataset.region));
 
 // Anterior / Posterior View Switch
-$$('.body-tab').forEach(b => b.onclick = () => {
+$$('.pill-btn').forEach(b => b.onclick = () => {
   playCozySound('pop');
   const back = b.dataset.viewbody === 'back';
-  $$('.body-tab').forEach(x => x.classList.toggle('selected', x === b));
+  $$('.pill-btn').forEach(x => x.classList.toggle('selected', x === b));
   $('.body-figure').classList.toggle('back', back);
   $('#figure-caption').textContent = back ? 'POSTERIOR VIEW' : 'ANTERIOR VIEW';
   toast(back ? 'Posterior view active' : 'Anterior view active');
 });
 
-// Chunky Layer Peeling Slider Controller
-$$('.peel-step').forEach(btn => {
+// Chunky Thumb Layer Slider
+$$('.peel-thumb-btn').forEach(btn => {
   btn.onclick = () => {
     playCozySound('pop');
     const layer = +btn.dataset.layer;
     currentLayer = layer;
-    $$('.peel-step').forEach(b => b.classList.toggle('selected', +b.dataset.layer === layer));
+    $$('.peel-thumb-btn').forEach(b => b.classList.toggle('selected', +b.dataset.layer === layer));
 
     const figure = $('#figure-wrap');
     figure.classList.remove('layer-skeleton-only', 'layer-deep-only', 'layer-superficial-only');
 
     if (layer === 0) {
       figure.classList.add('layer-skeleton-only');
-      toast('Layer 0: Complete Skeleton (206 Bones)');
+      toast('Layer 0: Skeleton Only (206 Bones)');
     } else if (layer === 1) {
       figure.classList.add('layer-deep-only');
       toast('Layer 1: Deep Muscles & Stabilizers');
@@ -302,67 +328,84 @@ $$('.peel-step').forEach(btn => {
   };
 });
 
-// Kinesiology Action Play Button
-$('#action-play-btn').onclick = () => {
-  if (!currentRegion) {
-    toast('Please select an anatomical region first.');
-    return;
-  }
-  isPlayingAction = !isPlayingAction;
-  playCozySound(isPlayingAction ? 'chime' : 'pop');
-  $('#action-play-btn').classList.toggle('active', isPlayingAction);
-
-  const figure = $('.human-svg');
-  if (isPlayingAction) {
-    figure.style.transform = 'scale(1.04)';
-    figure.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    toast('✦ Kinesiology Action: Muscle shortening & mechanical force loop');
-  } else {
-    figure.style.transform = 'scale(1)';
-    toast('Action loop paused');
-  }
-};
-
-// Isolation Mode Button
-$('#action-isolate-btn').onclick = () => {
-  if (!currentRegion) {
-    toast('Please select an anatomical region first.');
-    return;
-  }
-  isIsolated = !isIsolated;
+// Bottom Sheet Collapse Toggle
+const sheetToggle = $('#sheet-toggle');
+const sheetHandle = $('#sheet-handle');
+function toggleSheet() {
+  sheetExpanded = !sheetExpanded;
   playCozySound('pop');
-  $('#action-isolate-btn').classList.toggle('active', isIsolated);
+  const content = $('#region-content');
+  if (content) content.style.display = sheetExpanded ? 'flex' : 'none';
+  if (sheetToggle) sheetToggle.textContent = sheetExpanded ? '▼' : '▲';
+}
+if (sheetToggle) sheetToggle.onclick = toggleSheet;
+if (sheetHandle) sheetHandle.onclick = toggleSheet;
 
-  const bones = $$('.human-svg .bone, .human-svg .bone-line');
-  const muscles = $$('.human-svg .muscle');
-  if (isIsolated) {
-    muscles.forEach(m => m.style.opacity = '0.15');
-    bones.forEach(b => b.style.opacity = '0.35');
-    toast('⊞ Isolation Mode: Solitary focus on active structures');
-  } else {
-    muscles.forEach(m => m.style.opacity = '');
-    bones.forEach(b => b.style.opacity = '');
-    toast('Isolation exited');
-  }
-};
+// Kinesiology Action Play
+const actionBtn = $('#action-play-btn');
+if (actionBtn) {
+  actionBtn.onclick = () => {
+    if (!currentRegion) {
+      toast('Tap a pin on the body map first.');
+      return;
+    }
+    isPlayingAction = !isPlayingAction;
+    playCozySound(isPlayingAction ? 'chime' : 'pop');
+    actionBtn.classList.toggle('active', isPlayingAction);
+
+    const figure = $('.human-svg');
+    if (isPlayingAction) {
+      figure.style.transform = 'scale(1.04)';
+      figure.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      toast('✦ Action State: Muscle shortening & force loop');
+    } else {
+      figure.style.transform = 'scale(1)';
+      toast('Action paused');
+    }
+  };
+}
+
+// Isolation Mode
+const isolateBtn = $('#action-isolate-btn');
+if (isolateBtn) {
+  isolateBtn.onclick = () => {
+    if (!currentRegion) {
+      toast('Tap a pin on the body map first.');
+      return;
+    }
+    isIsolated = !isIsolated;
+    playCozySound('pop');
+    isolateBtn.classList.toggle('active', isIsolated);
+
+    const bones = $$('.human-svg .bone, .human-svg .bone-line');
+    const muscles = $$('.human-svg .muscle');
+    if (isIsolated) {
+      muscles.forEach(m => m.style.opacity = '0.15');
+      bones.forEach(b => b.style.opacity = '0.35');
+      toast('⊞ Isolation Mode: Active structure only');
+    } else {
+      muscles.forEach(m => m.style.opacity = '');
+      bones.forEach(b => b.style.opacity = '');
+      toast('Isolation exited');
+    }
+  };
+}
 
 // Reset Progress
-$('#reset-progress').onclick = () => {
-  playCozySound('pop');
-  state.days = 0;
-  state.xp = 0;
-  state.streak = 0;
-  state.lastDate = '';
-  state.lessonProgress = 0;
-  state.completed = [];
-  save();
-  toast('Local progress reset.');
-};
-
-$('#mobile-menu').onclick = () => {
-  playCozySound('pop');
-  $('.sidebar').classList.toggle('open');
-};
+const resetBtn = $('#reset-progress');
+if (resetBtn) {
+  resetBtn.onclick = () => {
+    playCozySound('pop');
+    state.days = 0;
+    state.xp = 0;
+    state.streak = 0;
+    state.lastDate = '';
+    state.lessonProgress = 0;
+    state.completed = [];
+    save();
+    toast('Local progress reset.');
+  };
+}
 
 // Initialize
 renderStats();
