@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AnatoMe</string>
+    <string name="title_activity_main">AnatoMe</string>
+    <string name="package_name">com.anatome.app</string>
+    <string name="custom_url_scheme">com.anatome.app</string>
+</resources>
