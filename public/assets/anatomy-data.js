@@ -85,21 +85,41 @@ const ANATOMY_REGISTRY = {
   // =========================================================================
   muscles: {
     // -----------------------------------------------------------------------
-    // A. SHOULDER & ROTATOR CUFF
+    // A. SHOULDER & ROTATOR CUFF (DISCRETE HEADS & BELLIES)
     // -----------------------------------------------------------------------
     shoulder: [
       {
-        id: "mus_deltoideus",
-        english: "Deltoid",
-        latin: "Musculus deltoideus",
+        id: "m_deltoideus_pars_clavicularis",
+        english: "Deltoid (Anterior / Clavicular Part)",
+        latin: "Musculus deltoideus (Pars clavicularis)",
         layer: 2, // Superficial
-        origin: "Lateral 1/3 of clavicle, acromion, and spine of scapula",
+        origin: "Lateral 1/3 of clavicle (anterior border)",
         insertion: "Deltoid tuberosity of humerus",
-        actions: ["Abduction of arm (15°-90°)", "Anterior fibers: Flexion & medial rotation", "Posterior fibers: Extension & lateral rotation"],
+        actions: ["Arm Flexion", "Medial (internal) rotation of humerus", "Horizontal adduction"],
         innervation: "Axillary nerve (C5, C6)"
       },
       {
-        id: "mus_supraspinatus",
+        id: "m_deltoideus_pars_acromialis",
+        english: "Deltoid (Middle / Acromial Part)",
+        latin: "Musculus deltoideus (Pars acromialis)",
+        layer: 2, // Superficial
+        origin: "Lateral border and superior surface of acromion",
+        insertion: "Deltoid tuberosity of humerus",
+        actions: ["Powerful arm abduction (15°-90°)", "Stabilizes humeral head against downward force"],
+        innervation: "Axillary nerve (C5, C6)"
+      },
+      {
+        id: "m_deltoideus_pars_spinalis",
+        english: "Deltoid (Posterior / Spinal Part)",
+        latin: "Musculus deltoideus (Pars spinalis)",
+        layer: 2, // Superficial
+        origin: "Inferior lip of the spine of the scapula",
+        insertion: "Deltoid tuberosity of humerus",
+        actions: ["Arm Extension", "Lateral (external) rotation", "Horizontal abduction"],
+        innervation: "Axillary nerve (C5, C6)"
+      },
+      {
+        id: "m_supraspinatus",
         english: "Supraspinatus (Rotator Cuff)",
         latin: "Musculus supraspinatus",
         layer: 1, // Deep
@@ -109,7 +129,7 @@ const ANATOMY_REGISTRY = {
         innervation: "Suprascapular nerve (C5, C6)"
       },
       {
-        id: "mus_infraspinatus",
+        id: "m_infraspinatus",
         english: "Infraspinatus (Rotator Cuff)",
         latin: "Musculus infraspinatus",
         layer: 1, // Deep
@@ -119,7 +139,7 @@ const ANATOMY_REGISTRY = {
         innervation: "Suprascapular nerve (C5, C6)"
       },
       {
-        id: "mus_teres_minor",
+        id: "m_teres_minor",
         english: "Teres Minor (Rotator Cuff)",
         latin: "Musculus teres minor",
         layer: 1, // Deep
@@ -129,17 +149,17 @@ const ANATOMY_REGISTRY = {
         innervation: "Axillary nerve (C5, C6)"
       },
       {
-        id: "mus_subscapularis",
+        id: "m_subscapularis",
         english: "Subscapularis (Rotator Cuff)",
         latin: "Musculus subscapularis",
         layer: 1, // Deep
         origin: "Subscapular fossa of anterior scapula",
-        insertion: "Lesser tubercle of humerus",
+        insertion: "Lesser tubercle of humerus & anterior capsule",
         actions: ["Medial (internal) rotation of arm", "Depresses and stabilizes humeral head"],
         innervation: "Upper and lower subscapular nerves (C5, C6)"
       },
       {
-        id: "mus_teres_major",
+        id: "m_teres_major",
         english: "Teres Major",
         latin: "Musculus teres major",
         layer: 2, // Superficial
@@ -151,21 +171,31 @@ const ANATOMY_REGISTRY = {
     ],
 
     // -----------------------------------------------------------------------
-    // B. ARM & FOREARM
+    // B. ARM & BRACHIUM (DISCRETE HEADS & BELLIES)
     // -----------------------------------------------------------------------
     arm: [
       {
-        id: "mus_biceps_brachii",
-        english: "Biceps Brachii",
-        latin: "Musculus biceps brachii",
+        id: "m_biceps_brachii_caput_longum",
+        english: "Biceps Brachii (Long Head)",
+        latin: "Musculus biceps brachii (Caput longum)",
         layer: 2, // Superficial
-        origin: "Long head: Supraglenoid tubercle of scapula; Short head: Coracoid process of scapula",
-        insertion: "Radial tuberosity and bicipital aponeurosis into deep fascia of forearm",
-        actions: ["Powerful supinator of flexed forearm", "Flexion of elbow joint", "Weak flexion of shoulder joint"],
+        origin: "Supraglenoid tubercle of scapula (runs via bicipital groove)",
+        insertion: "Radial tuberosity (posterior facet)",
+        actions: ["Forearm Supination", "Elbow Flexion", "Shoulder joint stabilization"],
         innervation: "Musculocutaneous nerve (C5, C6)"
       },
       {
-        id: "mus_brachialis",
+        id: "m_biceps_brachii_caput_breve",
+        english: "Biceps Brachii (Short Head)",
+        latin: "Musculus biceps brachii (Caput breve)",
+        layer: 2, // Superficial
+        origin: "Apex of coracoid process of scapula (conjoint tendon)",
+        insertion: "Radial tuberosity & bicipital aponeurosis",
+        actions: ["Elbow Flexion", "Forearm Supination", "Shoulder adduction & forward flexion"],
+        innervation: "Musculocutaneous nerve (C5, C6)"
+      },
+      {
+        id: "m_brachialis",
         english: "Brachialis",
         latin: "Musculus brachialis",
         layer: 1, // Deep
@@ -175,7 +205,7 @@ const ANATOMY_REGISTRY = {
         innervation: "Musculocutaneous nerve (C5, C6) with small radial contribution (C7)"
       },
       {
-        id: "mus_coracobrachialis",
+        id: "m_coracobrachialis",
         english: "Coracobrachialis",
         latin: "Musculus coracobrachialis",
         layer: 1, // Deep
@@ -185,13 +215,33 @@ const ANATOMY_REGISTRY = {
         innervation: "Musculocutaneous nerve (pierced by it, C5-C7)"
       },
       {
-        id: "mus_triceps_brachii",
-        english: "Triceps Brachii",
-        latin: "Musculus triceps brachii",
+        id: "m_triceps_brachii_caput_longum",
+        english: "Triceps Brachii (Long Head)",
+        latin: "Musculus triceps brachii (Caput longum)",
         layer: 2, // Superficial
-        origin: "Long head: Infraglenoid tubercle of scapula; Lateral head: Posterior humerus superior to radial groove; Medial head: Posterior humerus inferior to radial groove",
+        origin: "Infraglenoid tubercle of scapula",
+        insertion: "Posterior surface of olecranon process of ulna via common triceps tendon",
+        actions: ["Elbow Extension", "Arm Extension and Adduction at shoulder"],
+        innervation: "Radial nerve (C6, C7, C8)"
+      },
+      {
+        id: "m_triceps_brachii_caput_laterale",
+        english: "Triceps Brachii (Lateral Head)",
+        latin: "Musculus triceps brachii (Caput laterale)",
+        layer: 2, // Superficial
+        origin: "Posterior humerus superior to radial groove & lateral intermuscular septum",
         insertion: "Olecranon process of ulna",
-        actions: ["Chief extensor of the elbow joint", "Long head assists in adduction and extension of arm at shoulder"],
+        actions: ["Powerful elbow extension against resistance"],
+        innervation: "Radial nerve (C6, C7, C8)"
+      },
+      {
+        id: "m_triceps_brachii_caput_mediale",
+        english: "Triceps Brachii (Medial Head)",
+        latin: "Musculus triceps brachii (Caput mediale)",
+        layer: 1, // Deep
+        origin: "Posterior surface of humerus inferior to radial groove",
+        insertion: "Olecranon process of ulna",
+        actions: ["Workhorse of elbow extension (active in all forms of extension)"],
         innervation: "Radial nerve (C6, C7, C8)"
       },
       {

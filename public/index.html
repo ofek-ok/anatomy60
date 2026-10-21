@@ -183,40 +183,80 @@
         <div class="body-figure" id="figure-wrap">
           <div class="diorama-pedestal"></div>
           <svg viewBox="0 0 280 480" class="human-svg" role="img" aria-label="Human anatomy diorama">
-            <!-- Skeletal Base (Layer 0) -->
+            <!-- Skeletal Base (Layer 0: Scapula, Clavicle, Humerus, Radius, Ulna) -->
             <g class="layer-skeleton">
               <circle class="bone skull" cx="140" cy="49" r="33"/>
+              <!-- Scapula & Clavicle Frame -->
+              <path class="bone clavicle" d="M140 85 Q115 82 92 88 M140 85 Q165 82 188 88" stroke-width="4"/>
+              <path class="bone scapula" d="M92 88 L78 120 L104 148 L114 96 Z M188 88 L202 120 L176 148 L166 96 Z"/>
+              <!-- Spine & Ribcage -->
               <path class="bone spine-ribs" d="M111 88 Q140 76 169 88 L185 168 L176 211 L168 269 L180 432 Q164 448 149 436 L140 292 L130 436 Q112 448 98 432 L112 269 L104 211 L95 168Z"/>
+              <!-- Humerus, Radius & Ulna with distinct anatomical landmarks -->
               <path class="bone limbs" d="M103 100 L67 190 L40 296 Q46 309 58 301 L99 217 M177 100 L213 190 L240 296 Q234 309 222 301 L181 217"/>
               <path class="bone-line" d="M140 96V245 M108 149H172 M113 260H167 M140 291L116 431 M140 291L164 431"/>
             </g>
-            <!-- Deep Muscles (Layer 1) -->
+
+            <!-- Layer 1: Deep Muscles & Rotator Cuff (Supraspinatus, Subscapularis, Brachialis) -->
             <g class="layer-deep">
-              <path class="muscle deep-rotator" d="M116 110 Q98 116 102 138 L114 148 L128 139 L126 112Z"/>
-              <path class="muscle deep-rotator" d="M164 110 Q182 116 178 138 L166 148 L152 139 L154 112Z"/>
+              <!-- Supraspinatus & Infraspinatus -->
+              <path class="muscle supraspinatus" d="M116 94 Q98 90 92 108 L104 116 L124 106 Z"/>
+              <path class="muscle supraspinatus" d="M164 94 Q182 90 188 108 L176 116 L156 106 Z"/>
+              <!-- Subscapularis -->
+              <path class="muscle subscapularis" d="M116 110 Q98 116 102 138 L114 148 L128 139 L126 112Z"/>
+              <path class="muscle subscapularis" d="M164 110 Q182 116 178 138 L166 148 L152 139 L154 112Z"/>
+              <!-- Deep Brachialis (Under Biceps) -->
+              <path class="muscle brachialis" d="M96 145 L74 185 L84 205 L102 165 Z"/>
+              <path class="muscle brachialis" d="M184 145 L206 185 L196 205 L178 165 Z"/>
+              <!-- Deep Core -->
               <path class="muscle deep-core" d="M118 165 Q140 158 162 165 L158 222 Q140 234 122 222Z"/>
             </g>
-            <!-- Superficial Muscles (Layer 2) -->
+
+            <!-- Layer 2: Superficial Movers (Discrete Heads & Bellies) -->
             <g class="layer-superficial">
-              <path class="muscle deltoid" d="M109 100 Q88 105 95 132 L113 149 L132 138 L130 105Z"/>
-              <path class="muscle deltoid" d="M171 100 Q192 105 185 132 L167 149 L148 138 L150 105Z"/>
+              <!-- Tendons (Matte Ivory/White: Biceps Longum & Radial Insertion) -->
+              <path class="tendon-white tendon-biceps-long" d="M92 98 Q90 115 88 130" stroke-width="2.5"/>
+              <path class="tendon-white tendon-biceps-long" d="M188 98 Q190 115 192 130" stroke-width="2.5"/>
+              <path class="tendon-white tendon-distal" d="M78 202 L70 215" stroke-width="3"/>
+              <path class="tendon-white tendon-distal" d="M202 202 L210 215" stroke-width="3"/>
+
+              <!-- Discrete Deltoid: Clavicular, Acromial, and Spinate Parts -->
+              <path class="muscle deltoid deltoid-clavicular" d="M112 98 Q95 104 98 128 L113 148 L126 138 Z"/>
+              <path class="muscle deltoid deltoid-acromial" d="M168 98 Q185 104 182 128 L167 148 L154 138 Z"/>
+              <!-- Inter-muscular Crevice lines on Deltoid heads -->
+              <path class="crevice-line" d="M108 106 Q98 124 104 142"/>
+              <path class="crevice-line" d="M172 106 Q182 124 176 142"/>
+
+              <!-- Discrete Biceps Brachii: Caput Longum & Caput Breve -->
+              <path class="muscle biceps-longum" d="M88 128 Q75 145 74 182 L84 195 L95 162 Z"/>
+              <path class="muscle biceps-breve" d="M96 132 Q88 152 84 195 L92 204 L102 165 Z"/>
+              <path class="muscle biceps-longum" d="M192 128 Q205 145 206 182 L196 195 L185 162 Z"/>
+              <path class="muscle biceps-breve" d="M184 132 Q192 152 196 195 L188 204 L178 165 Z"/>
+              <!-- Inter-muscular Crevice between Biceps Long & Short heads -->
+              <path class="crevice-line" d="M92 135 L86 188"/>
+              <path class="crevice-line" d="M188 135 L194 188"/>
+
+              <!-- Triceps Long & Lateral Heads (Posterior/Lateral view) -->
+              <path class="muscle triceps-head" d="M68 130 L60 178 L72 188 L76 145 Z"/>
+              <path class="muscle triceps-head" d="M212 130 L220 178 L208 188 L204 145 Z"/>
+
+              <!-- Pectoralis Major & Torso -->
               <path class="muscle pectoralis" d="M112 155 Q140 147 168 155 L163 230 Q140 244 117 230Z"/>
-              <path class="muscle biceps" d="M99 108 Q79 111 73 162 L64 205 L78 212 L99 169 L108 133Z"/>
-              <path class="muscle biceps" d="M181 108 Q201 111 207 162 L216 205 L202 212 L181 169 L172 133Z"/>
+              <!-- Legs & Lower Body -->
               <path class="muscle glute-quad" d="M119 247 Q140 256 161 247 L157 301 L140 309 L123 301Z"/>
               <path class="muscle calf" d="M122 312 L138 316 L130 415 L109 422 L113 354Z"/>
               <path class="muscle calf" d="M158 312 L142 316 L150 415 L171 422 L167 354Z"/>
             </g>
+
             <!-- Skin Outline (Layer 3) -->
             <path class="skin-outline" d="M140 14 Q177 14 177 49 Q177 84 195 98 L244 290 Q240 314 220 305 L186 225 L182 435 Q164 455 145 440 L140 310 L135 440 Q116 455 98 435 L94 225 L60 305 Q40 314 36 290 L85 98 Q103 84 103 49 Q103 14 140 14Z"/>
           </svg>
 
-          <!-- Interactive Touch Pins -->
-          <button class="mobile-pin pin-shoulder" data-region="shoulders" aria-label="Shoulder"></button>
-          <button class="mobile-pin pin-chest" data-region="chest" aria-label="Chest"></button>
-          <button class="mobile-pin pin-arm" data-region="arms" aria-label="Arms"></button>
-          <button class="mobile-pin pin-core" data-region="core" aria-label="Core"></button>
-          <button class="mobile-pin pin-legs" data-region="legs" aria-label="Legs"></button>
+          <!-- Interactive Touch Pins (Specific Anatomical Sockets) -->
+          <button class="mobile-pin pin-shoulder" data-region="shoulders" aria-label="Deltoid & Rotator Cuff"></button>
+          <button class="mobile-pin pin-arm" data-region="arms" aria-label="Biceps & Brachialis"></button>
+          <button class="mobile-pin pin-chest" data-region="chest" aria-label="Pectoralis & Chest"></button>
+          <button class="mobile-pin pin-core" data-region="core" aria-label="Core & Lumbar"></button>
+          <button class="mobile-pin pin-legs" data-region="legs" aria-label="Thigh & Leg"></button>
           <span class="diorama-view-label" id="figure-caption">ANTERIOR VIEW</span>
         </div>
       </div>

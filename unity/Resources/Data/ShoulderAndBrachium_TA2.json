@@ -1,0 +1,388 @@
+{
+  "region": "Region2_ShoulderAndBrachium",
+  "regionName": "Shoulder Girdle & Brachium",
+  "ta2StandardVersion": "2.0",
+  "source": "Z-Anatomy & Terminologia Anatomica 2",
+  "muscles": [
+    {
+      "structureId": "m_biceps_brachii_caput_longum",
+      "nameEnglish": "Biceps Brachii (Long Head)",
+      "nameLatin": "Musculus biceps brachii (Caput longum)",
+      "region": "Region2_ShoulderAndBrachium",
+      "layer": 2,
+      "origins": [
+        {
+          "boneId": "bone_scapula_r",
+          "landmarkName": "Supraglenoid tubercle of scapula & superior glenoid labrum",
+          "anchorSocketName": "anchor_supraglenoid_tubercle_r",
+          "localOffset": { "x": 0.012, "y": 0.145, "z": 0.022 }
+        }
+      ],
+      "insertions": [
+        {
+          "boneId": "bone_radius_r",
+          "landmarkName": "Radial tuberosity (posterior facet)",
+          "anchorSocketName": "anchor_radial_tuberosity_r",
+          "localOffset": { "x": -0.005, "y": -0.285, "z": 0.010 }
+        }
+      ],
+      "actions": [
+        {
+          "actionType": "Supination",
+          "targetJoint": "Proximal Radioulnar Joint",
+          "animationClipKey": "anim_biceps_supination",
+          "blendShapeWeight": 85.0
+        },
+        {
+          "actionType": "Flexion",
+          "targetJoint": "Humeroulnar Joint",
+          "animationClipKey": "anim_biceps_elbow_flexion",
+          "blendShapeWeight": 95.0
+        }
+      ],
+      "innervation": "Musculocutaneous nerve (C5, C6)",
+      "clinicalNotes": "Tendon travels intra-articular through the bicipital groove. Rupture of proximal tendon leads to Popeye deformity.",
+      "meshAddressableKey": "Meshes/Shoulder/m_biceps_brachii_caput_longum.fbx",
+      "cozyTint": { "r": 0.95, "g": 0.62, "b": 0.56, "a": 1.0 }
+    },
+    {
+      "structureId": "m_biceps_brachii_caput_breve",
+      "nameEnglish": "Biceps Brachii (Short Head)",
+      "nameLatin": "Musculus biceps brachii (Caput breve)",
+      "region": "Region2_ShoulderAndBrachium",
+      "layer": 2,
+      "origins": [
+        {
+          "boneId": "bone_scapula_r",
+          "landmarkName": "Apex of coracoid process of scapula",
+          "anchorSocketName": "anchor_coracoid_process_r",
+          "localOffset": { "x": 0.035, "y": 0.138, "z": 0.045 }
+        }
+      ],
+      "insertions": [
+        {
+          "boneId": "bone_radius_r",
+          "landmarkName": "Radial tuberosity & bicipital aponeurosis",
+          "anchorSocketName": "anchor_radial_tuberosity_r",
+          "localOffset": { "x": -0.005, "y": -0.285, "z": 0.010 }
+        }
+      ],
+      "actions": [
+        {
+          "actionType": "Flexion",
+          "targetJoint": "Elbow Joint",
+          "animationClipKey": "anim_biceps_short_flexion",
+          "blendShapeWeight": 90.0
+        },
+        {
+          "actionType": "Adduction",
+          "targetJoint": "Glenohumeral Joint",
+          "animationClipKey": "anim_biceps_shoulder_adduction",
+          "blendShapeWeight": 40.0
+        }
+      ],
+      "innervation": "Musculocutaneous nerve (C5, C6)",
+      "clinicalNotes": "Forms the conjoint tendon with coracobrachialis at the coracoid process.",
+      "meshAddressableKey": "Meshes/Shoulder/m_biceps_brachii_caput_breve.fbx",
+      "cozyTint": { "r": 0.95, "g": 0.62, "b": 0.56, "a": 1.0 }
+    },
+    {
+      "structureId": "m_brachialis",
+      "nameEnglish": "Brachialis",
+      "nameLatin": "Musculus brachialis",
+      "region": "Region2_ShoulderAndBrachium",
+      "layer": 1,
+      "origins": [
+        {
+          "boneId": "bone_humerus_r",
+          "landmarkName": "Distal anterior half of humerus & intermuscular septa",
+          "anchorSocketName": "anchor_humerus_distal_ant_r",
+          "localOffset": { "x": 0.0, "y": -0.12, "z": 0.01 }
+        }
+      ],
+      "insertions": [
+        {
+          "boneId": "bone_ulna_r",
+          "landmarkName": "Coronoid process & ulnar tuberosity",
+          "anchorSocketName": "anchor_coronoid_process_r",
+          "localOffset": { "x": 0.0, "y": -0.29, "z": -0.01 }
+        }
+      ],
+      "actions": [
+        {
+          "actionType": "Flexion",
+          "targetJoint": "Humeroulnar Joint",
+          "animationClipKey": "anim_brachialis_flexion",
+          "blendShapeWeight": 100.0
+        }
+      ],
+      "innervation": "Musculocutaneous nerve (C5, C6) with small radial contribution (C7)",
+      "clinicalNotes": "Pure elbow flexor in all forearm positions (pronated, neutral, supinated); the workhorse of the elbow.",
+      "meshAddressableKey": "Meshes/Shoulder/m_brachialis.fbx",
+      "cozyTint": { "r": 0.85, "g": 0.49, "b": 0.48, "a": 1.0 }
+    },
+    {
+      "structureId": "m_coracobrachialis",
+      "nameEnglish": "Coracobrachialis",
+      "nameLatin": "Musculus coracobrachialis",
+      "region": "Region2_ShoulderAndBrachium",
+      "layer": 1,
+      "origins": [
+        {
+          "boneId": "bone_scapula_r",
+          "landmarkName": "Coracoid process of scapula (conjoint tendon with biceps short head)",
+          "anchorSocketName": "anchor_coracoid_process_r",
+          "localOffset": { "x": 0.035, "y": 0.138, "z": 0.045 }
+        }
+      ],
+      "insertions": [
+        {
+          "boneId": "bone_humerus_r",
+          "landmarkName": "Medial surface of humerus shaft opposite deltoid tuberosity",
+          "anchorSocketName": "anchor_humerus_medial_shaft_r",
+          "localOffset": { "x": 0.015, "y": -0.05, "z": 0.0 }
+        }
+      ],
+      "actions": [
+        {
+          "actionType": "Flexion",
+          "targetJoint": "Glenohumeral Joint",
+          "animationClipKey": "anim_coracobrachialis_flexion",
+          "blendShapeWeight": 65.0
+        },
+        {
+          "actionType": "Adduction",
+          "targetJoint": "Glenohumeral Joint",
+          "animationClipKey": "anim_coracobrachialis_adduction",
+          "blendShapeWeight": 70.0
+        }
+      ],
+      "innervation": "Musculocutaneous nerve (pierced by it, C5-C7)",
+      "clinicalNotes": "Key anatomical landmark for the musculocutaneous nerve which penetrates through its belly.",
+      "meshAddressableKey": "Meshes/Shoulder/m_coracobrachialis.fbx",
+      "cozyTint": { "r": 0.85, "g": 0.49, "b": 0.48, "a": 1.0 }
+    },
+    {
+      "structureId": "m_triceps_brachii_caput_longum",
+      "nameEnglish": "Triceps Brachii (Long Head)",
+      "nameLatin": "Musculus triceps brachii (Caput longum)",
+      "region": "Region2_ShoulderAndBrachium",
+      "layer": 2,
+      "origins": [
+        {
+          "boneId": "bone_scapula_r",
+          "landmarkName": "Infraglenoid tubercle of scapula",
+          "anchorSocketName": "anchor_infraglenoid_tubercle_r",
+          "localOffset": { "x": -0.015, "y": 0.11, "z": -0.02 }
+        }
+      ],
+      "insertions": [
+        {
+          "boneId": "bone_ulna_r",
+          "landmarkName": "Posterior surface of olecranon process of ulna",
+          "anchorSocketName": "anchor_olecranon_r",
+          "localOffset": { "x": 0.0, "y": -0.29, "z": -0.03 }
+        }
+      ],
+      "actions": [
+        {
+          "actionType": "Extension",
+          "targetJoint": "Humeroulnar Joint",
+          "animationClipKey": "anim_triceps_extension",
+          "blendShapeWeight": 95.0
+        },
+        {
+          "actionType": "Extension",
+          "targetJoint": "Glenohumeral Joint",
+          "animationClipKey": "anim_triceps_shoulder_extension",
+          "blendShapeWeight": 60.0
+        }
+      ],
+      "innervation": "Radial nerve (C6, C7, C8)",
+      "clinicalNotes": "Only head of triceps crossing two joints; helps stabilize abducted glenohumeral joint.",
+      "meshAddressableKey": "Meshes/Shoulder/m_triceps_brachii_caput_longum.fbx",
+      "cozyTint": { "r": 0.95, "g": 0.62, "b": 0.56, "a": 1.0 }
+    },
+    {
+      "structureId": "m_deltoideus_pars_clavicularis",
+      "nameEnglish": "Deltoid (Anterior / Clavicular Part)",
+      "nameLatin": "Musculus deltoideus (Pars clavicularis)",
+      "region": "Region2_ShoulderAndBrachium",
+      "layer": 2,
+      "origins": [
+        {
+          "boneId": "bone_clavicula_r",
+          "landmarkName": "Superior surface and anterior border of lateral 1/3 of clavicle",
+          "anchorSocketName": "anchor_clavicle_lateral_r",
+          "localOffset": { "x": 0.06, "y": 0.16, "z": 0.03 }
+        }
+      ],
+      "insertions": [
+        {
+          "boneId": "bone_humerus_r",
+          "landmarkName": "Deltoid tuberosity of humerus",
+          "anchorSocketName": "anchor_deltoid_tuberosity_r",
+          "localOffset": { "x": 0.02, "y": 0.02, "z": 0.0 }
+        }
+      ],
+      "actions": [
+        {
+          "actionType": "Flexion",
+          "targetJoint": "Glenohumeral Joint",
+          "animationClipKey": "anim_deltoid_ant_flexion",
+          "blendShapeWeight": 90.0
+        },
+        {
+          "actionType": "InternalRotation",
+          "targetJoint": "Glenohumeral Joint",
+          "animationClipKey": "anim_deltoid_ant_int_rot",
+          "blendShapeWeight": 70.0
+        }
+      ],
+      "innervation": "Axillary nerve (C5, C6)",
+      "clinicalNotes": "Primary mover in pushing and overhead forward reach.",
+      "meshAddressableKey": "Meshes/Shoulder/m_deltoideus_pars_clavicularis.fbx",
+      "cozyTint": { "r": 0.95, "g": 0.62, "b": 0.56, "a": 1.0 }
+    },
+    {
+      "structureId": "m_deltoideus_pars_acromialis",
+      "nameEnglish": "Deltoid (Middle / Acromial Part)",
+      "nameLatin": "Musculus deltoideus (Pars acromialis)",
+      "region": "Region2_ShoulderAndBrachium",
+      "layer": 2,
+      "origins": [
+        {
+          "boneId": "bone_scapula_r",
+          "landmarkName": "Lateral border and superior surface of acromion",
+          "anchorSocketName": "anchor_acromion_lateral_r",
+          "localOffset": { "x": 0.08, "y": 0.17, "z": 0.0 }
+        }
+      ],
+      "insertions": [
+        {
+          "boneId": "bone_humerus_r",
+          "landmarkName": "Deltoid tuberosity of humerus",
+          "anchorSocketName": "anchor_deltoid_tuberosity_r",
+          "localOffset": { "x": 0.02, "y": 0.02, "z": 0.0 }
+        }
+      ],
+      "actions": [
+        {
+          "actionType": "Abduction",
+          "targetJoint": "Glenohumeral Joint",
+          "animationClipKey": "anim_deltoid_mid_abduction",
+          "blendShapeWeight": 100.0
+        }
+      ],
+      "innervation": "Axillary nerve (C5, C6)",
+      "clinicalNotes": "Multipennate structure granting maximum force production during 15°-90° abduction.",
+      "meshAddressableKey": "Meshes/Shoulder/m_deltoideus_pars_acromialis.fbx",
+      "cozyTint": { "r": 0.95, "g": 0.62, "b": 0.56, "a": 1.0 }
+    },
+    {
+      "structureId": "m_supraspinatus",
+      "nameEnglish": "Supraspinatus (Rotator Cuff)",
+      "nameLatin": "Musculus supraspinatus",
+      "region": "Region2_ShoulderAndBrachium",
+      "layer": 1,
+      "origins": [
+        {
+          "boneId": "bone_scapula_r",
+          "landmarkName": "Supraspinous fossa of scapula & supraspinous fascia",
+          "anchorSocketName": "anchor_supraspinous_fossa_r",
+          "localOffset": { "x": -0.02, "y": 0.15, "z": -0.02 }
+        }
+      ],
+      "insertions": [
+        {
+          "boneId": "bone_humerus_r",
+          "landmarkName": "Superior facet of greater tubercle of humerus",
+          "anchorSocketName": "anchor_greater_tubercle_sup_r",
+          "localOffset": { "x": 0.02, "y": 0.12, "z": 0.0 }
+        }
+      ],
+      "actions": [
+        {
+          "actionType": "Abduction",
+          "targetJoint": "Glenohumeral Joint",
+          "animationClipKey": "anim_supraspinatus_abduction",
+          "blendShapeWeight": 80.0
+        }
+      ],
+      "innervation": "Suprascapular nerve (C5, C6)",
+      "clinicalNotes": "Most commonly torn rotator cuff tendon (subacromial impingement zone under coracoacromial arch).",
+      "meshAddressableKey": "Meshes/Shoulder/m_supraspinatus.fbx",
+      "cozyTint": { "r": 0.85, "g": 0.49, "b": 0.48, "a": 1.0 }
+    },
+    {
+      "structureId": "m_infraspinatus",
+      "nameEnglish": "Infraspinatus (Rotator Cuff)",
+      "nameLatin": "Musculus infraspinatus",
+      "region": "Region2_ShoulderAndBrachium",
+      "layer": 1,
+      "origins": [
+        {
+          "boneId": "bone_scapula_r",
+          "landmarkName": "Infraspinous fossa of scapula & infraspinous fascia",
+          "anchorSocketName": "anchor_infraspinous_fossa_r",
+          "localOffset": { "x": -0.03, "y": 0.08, "z": -0.03 }
+        }
+      ],
+      "insertions": [
+        {
+          "boneId": "bone_humerus_r",
+          "landmarkName": "Middle facet of greater tubercle of humerus",
+          "anchorSocketName": "anchor_greater_tubercle_mid_r",
+          "localOffset": { "x": 0.02, "y": 0.11, "z": -0.01 }
+        }
+      ],
+      "actions": [
+        {
+          "actionType": "ExternalRotation",
+          "targetJoint": "Glenohumeral Joint",
+          "animationClipKey": "anim_infraspinatus_ext_rot",
+          "blendShapeWeight": 90.0
+        }
+      ],
+      "innervation": "Suprascapular nerve (C5, C6)",
+      "clinicalNotes": "Key dynamic stabilizer preventing anterior subluxation during throwing follow-through.",
+      "meshAddressableKey": "Meshes/Shoulder/m_infraspinatus.fbx",
+      "cozyTint": { "r": 0.85, "g": 0.49, "b": 0.48, "a": 1.0 }
+    },
+    {
+      "structureId": "m_subscapularis",
+      "nameEnglish": "Subscapularis (Rotator Cuff)",
+      "nameLatin": "Musculus subscapularis",
+      "region": "Region2_ShoulderAndBrachium",
+      "layer": 1,
+      "origins": [
+        {
+          "boneId": "bone_scapula_r",
+          "landmarkName": "Subscapular fossa on anterior costal surface of scapula",
+          "anchorSocketName": "anchor_subscapular_fossa_r",
+          "localOffset": { "x": -0.01, "y": 0.09, "z": 0.01 }
+        }
+      ],
+      "insertions": [
+        {
+          "boneId": "bone_humerus_r",
+          "landmarkName": "Lesser tubercle of humerus & anterior capsule",
+          "anchorSocketName": "anchor_lesser_tubercle_r",
+          "localOffset": { "x": 0.01, "y": 0.11, "z": 0.02 }
+        }
+      ],
+      "actions": [
+        {
+          "actionType": "InternalRotation",
+          "targetJoint": "Glenohumeral Joint",
+          "animationClipKey": "anim_subscapularis_int_rot",
+          "blendShapeWeight": 95.0
+        }
+      ],
+      "innervation": "Upper and lower subscapular nerves (C5, C6)",
+      "clinicalNotes": "Largest and strongest muscle of the rotator cuff. Tested clinically using the Lift-off test or Belly-press test.",
+      "meshAddressableKey": "Meshes/Shoulder/m_subscapularis.fbx",
+      "cozyTint": { "r": 0.85, "g": 0.49, "b": 0.48, "a": 1.0 }
+    }
+  ]
+}

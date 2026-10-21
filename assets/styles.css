@@ -504,11 +504,28 @@ h1, h2, h3, .mobile-brand-name {
   box-shadow: 0 4px 14px rgba(91, 123, 166, 0.3);
 }
 
-.human-svg .tendon {
-  fill: #F6F3ED;
-  stroke: #D2C9BD;
-  stroke-width: 1.4;
+.human-svg .crevice-line {
+  stroke: #8E3734;
+  stroke-width: 1.6;
+  fill: none;
+  opacity: 0.85;
 }
+
+.human-svg .tendon-white {
+  fill: none;
+  stroke: #F6F3ED;
+  stroke-linecap: round;
+  filter: drop-shadow(0 1px 2px rgba(100, 90, 80, 0.2));
+}
+
+.human-svg .deltoid-clavicular { fill: #F4A292; }
+.human-svg .deltoid-acromial { fill: #EE9382; }
+.human-svg .biceps-longum { fill: #F29E8E; }
+.human-svg .biceps-breve { fill: #E98A78; }
+.human-svg .brachialis { fill: #D97D7A; }
+.human-svg .triceps-head { fill: #E68875; }
+.human-svg .supraspinatus { fill: #D97D7A; }
+.human-svg .subscapularis { fill: #CB726F; }
 
 .tab-pill {
   display: flex;
