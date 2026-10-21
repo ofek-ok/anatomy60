@@ -1,4 +1,4 @@
-// AnatoMe Mobile Engine — Mobile-Only Architecture with Genuine Z-Anatomy 3D Assets
+// AnatoMe Mobile Engine — Full-Body Real Z-Anatomy 3D Architecture
 const titles = [
   "Anatomical Language & Planes", "The Skeletal Framework", "Joints & Kinesiology",
   "Muscle Foundations & Fiber Types", "The Shoulder Complex", "The Arm & Forearm",
@@ -79,7 +79,7 @@ const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
 let currentView = 'home';
-let currentRegion = 'shoulders';
+let currentRegion = 'fullbody';
 let currentLayer = 2;
 let isIsolated = false;
 let isPlayingAction = false;
@@ -236,21 +236,27 @@ if (contBtn) {
   };
 }
 
-// Medical Region Mapping
+// Medical Region Names
 const regionNames = {
-  shoulders: "Shoulder Girdle & Rotator Cuff",
-  chest: "Chest & Thoracic Wall",
-  arms: "Arm & Forearm Kinetic Chain",
-  core: "Abdominal & Lumbar Stabilizers",
-  legs: "Thigh, Knee & Lower Leg"
+  fullbody: "Complete Human Musculoskeletal Atlas",
+  shoulder: "Shoulder Girdle & Rotator Cuff",
+  forearm: "Forearm, Wrist & Hand Chain",
+  chest: "Thorax, Ribcage & Vertebral Column",
+  core: "Abdominal Wall & Lumbar Spine",
+  pelvis: "Pelvic Girdle & Gluteal Synergies",
+  thigh: "Thigh, Femoral Triangle & Knee",
+  leg: "Lower Leg, Ankle & Foot Arches"
 };
 
 const regionRegistryMap = {
-  shoulders: "shoulder",
+  fullbody: "shoulder",
+  shoulder: "shoulder",
+  forearm: "arm",
   chest: "chest",
-  arms: "arm",
   core: "core",
-  legs: "hipAndThigh"
+  pelvis: "hipAndThigh",
+  thigh: "hipAndThigh",
+  leg: "hipAndThigh"
 };
 
 function selectRegion(key) {
@@ -284,12 +290,15 @@ function selectRegion(key) {
 
   if ($('#region-content')) $('#region-content').innerHTML = contentHTML;
 
-  // Sync with 3D Diorama
+  // Sync with 3D Diorama Camera Focus
   if (window.dioramaEngine) {
-    window.dioramaEngine.setActiveRegion(key);
+    window.dioramaEngine.focusRegion(key);
   }
 
-  // Expand bottom sheet if collapsed
+  // Update carousel chip UI
+  $$('.region-chip').forEach(c => c.classList.toggle('active', c.dataset.chunk === key));
+
+  // Expand bottom sheet
   const sheet = $('#bottom-sheet');
   if (sheet) {
     sheet.style.display = 'block';
@@ -322,11 +331,11 @@ $$('.peel-thumb-btn').forEach(btn => {
     }
 
     if (layer === 0) {
-      toast('Layer 0: Scanned Skeleton (Clavicle, Scapula, Humerus, Radius, Ulna)');
+      toast('Layer 0: Scanned Skeleton (All 206 Bones)');
     } else if (layer === 1) {
-      toast('Layer 1: Deep Stabilizers (Brachialis, Rotator Cuff)');
+      toast('Layer 1: Deep Muscles & Stabilizers');
     } else if (layer === 2) {
-      toast('Layer 2: Superficial Movers (Biceps heads, Deltoid heads, Triceps)');
+      toast('Layer 2: Superficial Movers (Full Muscular System)');
     } else {
       toast('Layer 3: Complete Anatomical View');
     }
@@ -359,7 +368,7 @@ if (actionBtn) {
     }
 
     if (isPlayingAction) {
-      toast('✦ Action State: Elbow flexion & Biceps shortening');
+      toast('✦ Action State: Muscle shortening & force loop');
     } else {
       toast('Action paused');
     }
@@ -403,29 +412,14 @@ if (resetBtn) {
 }
 
 // Regional Carousel Chunk Switcher
-const chunkToRegionMap = {
-  shoulder: "shoulders",
-  forearm: "arms",
-  chest: "chest",
-  core: "core",
-  pelvis: "legs",
-  thigh: "legs",
-  leg: "legs"
-};
-
 $$('.region-chip').forEach(chip => {
   chip.onclick = () => {
-    playCozySound('pop');
-    $$('.region-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    const targetRegion = chunkToRegionMap[chip.dataset.chunk] || "shoulders";
-    selectRegion(targetRegion);
-    toast(`Viewing Region: ${chip.textContent.trim()}`);
+    selectRegion(chip.dataset.chunk);
   };
 });
 
 // =========================================================================
-// 3D COZY WEBGL DIORAMA ENGINE (REAL Z-ANATOMY GLB LOADER)
+// 3D COZY WEBGL DIORAMA ENGINE (FULL BODY REAL Z-ANATOMY)
 // =========================================================================
 class AnatoMeDiorama {
   constructor(canvas) {
@@ -442,17 +436,37 @@ class AnatoMeDiorama {
 
     this.currentPeelLayer = 2;
     this.isIsolated = false;
-    this.activeRegion = 'shoulders';
+    this.activeRegion = 'fullbody';
     this.isKinesiologyPlaying = false;
     this.actionPhase = 0;
 
+    // Camera Navigation Focus Presets
+    this.cameraPresets = {
+      fullbody: { target: new THREE.Vector3(0, 0.60, 0), camPos: new THREE.Vector3(0, 0.70, 2.85) },
+      shoulder: { target: new THREE.Vector3(-0.16, 1.28, 0), camPos: new THREE.Vector3(-0.16, 1.30, 1.20) },
+      forearm: { target: new THREE.Vector3(-0.22, 0.92, 0), camPos: new THREE.Vector3(-0.22, 0.95, 1.15) },
+      chest: { target: new THREE.Vector3(0, 1.28, 0.05), camPos: new THREE.Vector3(0, 1.30, 1.20) },
+      core: { target: new THREE.Vector3(0, 0.95, 0.05), camPos: new THREE.Vector3(0, 0.98, 1.15) },
+      pelvis: { target: new THREE.Vector3(0, 0.72, 0), camPos: new THREE.Vector3(0, 0.75, 1.20) },
+      thigh: { target: new THREE.Vector3(0, 0.35, 0.05), camPos: new THREE.Vector3(0, 0.38, 1.30) },
+      leg: { target: new THREE.Vector3(0, -0.15, 0.05), camPos: new THREE.Vector3(0, -0.10, 1.30) }
+    };
+
+    this.currentCamPos = new THREE.Vector3(0, 0.70, 2.85);
+    this.targetCamPos = new THREE.Vector3(0, 0.70, 2.85);
+    this.currentLookAt = new THREE.Vector3(0, 0.60, 0);
+    this.targetLookAt = new THREE.Vector3(0, 0.60, 0);
+
     this.allMeshes = [];
     this.regionMeshes = {
-      shoulders: [],
-      arms: [],
+      fullbody: [],
+      shoulder: [],
+      forearm: [],
       chest: [],
       core: [],
-      legs: []
+      pelvis: [],
+      thigh: [],
+      leg: []
     };
 
     this.pins = [];
@@ -467,8 +481,8 @@ class AnatoMeDiorama {
     // 1. Scene & Camera
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(40, this.width / this.height, 0.1, 50);
-    this.camera.position.set(0, 1.05, 1.45);
-    this.camera.lookAt(0, 1.0, 0);
+    this.camera.position.copy(this.currentCamPos);
+    this.camera.lookAt(this.currentLookAt);
 
     // 2. WebGL Renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -494,8 +508,8 @@ class AnatoMeDiorama {
     // 6. Plinth Pedestal
     this.buildPedestal();
 
-    // 7. Load Real Z-Anatomy GLB Model (Region 1: Shoulder & Arm)
-    this.loadRealAnatomyModel();
+    // 7. Load Real Z-Anatomy Full-Body Model
+    this.loadFullBodyModel();
 
     // 8. Setup Pointer Controls
     this.setupEvents();
@@ -611,17 +625,17 @@ class AnatoMeDiorama {
     const pedestalGroup = new THREE.Group();
 
     // 1. Beveled travertine cylinder
-    const plinthGeom = new THREE.CylinderGeometry(0.55, 0.60, 0.08, 40);
+    const plinthGeom = new THREE.CylinderGeometry(0.85, 0.92, 0.10, 48);
     const plinth = new THREE.Mesh(plinthGeom, this.plinthMat);
-    plinth.position.y = 0.22;
+    plinth.position.y = -0.54;
     pedestalGroup.add(plinth);
 
     // 2. Brass rim trim
-    const rimGeom = new THREE.TorusGeometry(0.60, 0.008, 16, 40);
+    const rimGeom = new THREE.TorusGeometry(0.92, 0.012, 16, 48);
     const rimMat = new THREE.MeshBasicMaterial({ color: 0xD8B880 });
     const rim = new THREE.Mesh(rimGeom, rimMat);
     rim.rotation.x = Math.PI / 2;
-    rim.position.y = 0.18;
+    rim.position.y = -0.59;
     pedestalGroup.add(rim);
 
     // 3. Soft contact shadow plane
@@ -629,15 +643,15 @@ class AnatoMeDiorama {
     shadowCanvas.width = 128;
     shadowCanvas.height = 128;
     const ctx = shadowCanvas.getContext('2d');
-    const grad = ctx.createRadialGradient(64, 64, 6, 64, 64, 60);
-    grad.addColorStop(0, 'rgba(80, 60, 50, 0.36)');
-    grad.addColorStop(0.5, 'rgba(80, 60, 50, 0.15)');
+    const grad = ctx.createRadialGradient(64, 64, 8, 64, 64, 60);
+    grad.addColorStop(0, 'rgba(80, 60, 50, 0.38)');
+    grad.addColorStop(0.5, 'rgba(80, 60, 50, 0.16)');
     grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, 128, 128);
 
     const shadowTex = new THREE.CanvasTexture(shadowCanvas);
-    const shadowGeom = new THREE.PlaneGeometry(1.1, 1.1);
+    const shadowGeom = new THREE.PlaneGeometry(1.6, 1.6);
     const shadowMat = new THREE.MeshBasicMaterial({
       map: shadowTex,
       transparent: true,
@@ -645,51 +659,46 @@ class AnatoMeDiorama {
     });
     const shadowMesh = new THREE.Mesh(shadowGeom, shadowMat);
     shadowMesh.rotation.x = -Math.PI / 2;
-    shadowMesh.position.y = 0.262;
+    shadowMesh.position.y = -0.485;
     pedestalGroup.add(shadowMesh);
 
     this.dioramaGroup.add(pedestalGroup);
   }
 
-  // Load Genuine Z-Anatomy 3D Asset
-  loadRealAnatomyModel() {
+  loadFullBodyModel() {
     if (typeof THREE.GLTFLoader === 'undefined') {
       console.error('THREE.GLTFLoader not loaded');
       return;
     }
 
     const loader = new THREE.GLTFLoader();
-    loader.load('/assets/shoulder_and_arm.glb', (gltf) => {
+
+    // Hook up DRACOLoader
+    if (typeof THREE.DRACOLoader !== 'undefined') {
+      const dracoLoader = new THREE.DRACOLoader();
+      dracoLoader.setDecoderPath('/assets/draco/');
+      loader.setDRACOLoader(dracoLoader);
+    }
+
+    loader.load('/assets/full_body.glb', (gltf) => {
       this.model = gltf.scene;
       
-      // Calculate real bounding box & center
-      const box = new THREE.Box3().setFromObject(this.model);
-      const center = new THREE.Vector3();
-      box.getCenter(center);
-
-      // Scale and position precisely over travertine pedestal
-      const scale = 2.35;
-      this.model.scale.setScalar(scale);
-      this.model.position.set(-center.x * scale, -center.y * scale + 1.0, -center.z * scale);
-      this.model.updateMatrixWorld(true);
-
-      // Anatomical Categorization Rules
-      const boneNames = ['clavicle', 'scapula', 'humerus', 'radius', 'ulna'];
-      const deepNames = ['brachialis', 'coracobrachialis', 'supraspinatus', 'infraspinatus', 'subscapularis', 'teres'];
-      const superficialNames = ['biceps', 'deltoid', 'triceps', 'pectoralis'];
-
+      // Categorization keywords
+      const boneKeywords = ['bone', 'clavicle', 'scapula', 'humerus', 'radius', 'ulna', 'femur', 'patella', 'tibia', 'fibula', 'sternum', 'rib', 'vertebra', 'sacrum', 'ilium', 'ischium', 'pubis', 'parietal', 'frontal', 'occipital', 'temporal', 'sphenoid', 'mandible', 'maxilla', 'incus', 'malleus', 'stapes', 'metatarsal', 'metacarpal', 'phalanx', 'tarsal', 'carpal'];
+      const deepKeywords = ['subscapularis', 'supraspinatus', 'infraspinatus', 'teres minor', 'teres major', 'brachialis', 'coracobrachialis', 'transversus abdominis', 'quadratus lumborum', 'iliopsoas', 'piriformis', 'obturator', 'gemellus', 'pectoralis minor', 'levator scapulae', 'rhomboid', 'soleus', 'tibialis posterior', 'deep'];
+      
       this.model.traverse(child => {
         if (child.isMesh) {
           const name = child.name.toLowerCase();
           child.castShadow = true;
           child.receiveShadow = true;
 
-          // Categorize and apply custom Cozy Toon materials
-          if (boneNames.some(b => name.includes(b))) {
+          // Categorize by Layer (0: Bone, 1: Deep, 2: Superficial)
+          if (boneKeywords.some(k => name.includes(k))) {
             child.material = this.boneMat.clone();
             child.userData.layer = 0;
             child.userData.category = 'bone';
-          } else if (deepNames.some(d => name.includes(d))) {
+          } else if (deepKeywords.some(k => name.includes(k))) {
             child.material = this.deepMat.clone();
             child.userData.layer = 1;
             child.userData.category = 'deep';
@@ -699,18 +708,31 @@ class AnatoMeDiorama {
             child.userData.category = 'superficial';
           }
 
-          // Map to Interactive UI Regions
+          // Map to Regional Chunks
+          this.regionMeshes.fullbody.push(child);
           if (name.includes('deltoid') || name.includes('scapula') || name.includes('clavicle') || name.includes('supraspinatus') || name.includes('infraspinatus') || name.includes('subscapularis') || name.includes('teres')) {
-            this.regionMeshes.shoulders.push(child);
+            this.regionMeshes.shoulder.push(child);
           }
-          if (name.includes('biceps') || name.includes('triceps') || name.includes('brachialis') || name.includes('humerus') || name.includes('radius') || name.includes('ulna')) {
-            this.regionMeshes.arms.push(child);
+          if (name.includes('biceps') || name.includes('triceps') || name.includes('brachialis') || name.includes('humerus') || name.includes('radius') || name.includes('ulna') || name.includes('pronator') || name.includes('flexor carpi') || name.includes('extensor carpi')) {
+            this.regionMeshes.forearm.push(child);
           }
-          if (name.includes('pectoralis')) {
+          if (name.includes('pectoralis') || name.includes('sternum') || name.includes('rib') || name.includes('intercostal') || name.includes('thoracic') || name.includes('trapezius') || name.includes('latissimus')) {
             this.regionMeshes.chest.push(child);
           }
+          if (name.includes('rectus abdominis') || name.includes('oblique') || name.includes('transversus') || name.includes('linea alba') || name.includes('lumbar')) {
+            this.regionMeshes.core.push(child);
+          }
+          if (name.includes('pelvis') || name.includes('ilium') || name.includes('gluteus') || name.includes('sacrum') || name.includes('piriformis') || name.includes('psoas')) {
+            this.regionMeshes.pelvis.push(child);
+          }
+          if (name.includes('femur') || name.includes('quadriceps') || name.includes('rectus femoris') || name.includes('vastus') || name.includes('hamstring') || name.includes('biceps femoris') || name.includes('semitendinosus') || name.includes('patella') || name.includes('gracilis') || name.includes('sartorius')) {
+            this.regionMeshes.thigh.push(child);
+          }
+          if (name.includes('tibia') || name.includes('fibula') || name.includes('gastrocnemius') || name.includes('soleus') || name.includes('tibialis') || name.includes('achilles') || name.includes('foot') || name.includes('metatarsal')) {
+            this.regionMeshes.leg.push(child);
+          }
 
-          // Kinesiology joint references
+          // Kinesiology animation references
           if (name.includes('radius') || name.includes('ulna')) {
             this.forearmBones.push(child);
           }
@@ -727,29 +749,38 @@ class AnatoMeDiorama {
 
       this.dioramaGroup.add(this.model);
 
-      // Build Floating 3D Collectible Pins directly over real anatomical meshes
-      this.buildAnatomicalPins();
+      // Build Floating 3D Collectible Pins across all regions
+      this.buildFullBodyPins();
 
-      // Apply initial UI state
+      // Apply initial UI layer
       this.setPeelLayer(this.currentPeelLayer);
-      this.setActiveRegion(this.activeRegion);
+      this.focusRegion(this.activeRegion);
 
-      toast('✦ Loaded Real Z-Anatomy 3D Model: Shoulder & Arm');
+      toast('✦ Loaded Full-Body Z-Anatomy Atlas (960 Meshes)');
     }, undefined, (err) => {
-      console.error('Error loading real anatomy GLB:', err);
-      toast('Failed to load real anatomy GLB.');
+      console.warn('Error loading full_body.glb, loading fallback shoulder model:', err);
+      // Graceful fallback to shoulder_and_arm.glb if needed
+      loader.load('/assets/shoulder_and_arm.glb', (fallbackGltf) => {
+        this.model = fallbackGltf.scene;
+        this.model.scale.setScalar(2.35);
+        this.model.position.set(0.35, -0.45, 0);
+        this.dioramaGroup.add(this.model);
+        toast('Loaded Shoulder & Arm Dataset');
+      });
     });
   }
 
-  buildAnatomicalPins() {
+  buildFullBodyPins() {
     this.pinsGroup = new THREE.Group();
 
     const pinConfigs = [
-      { key: 'shoulders', label: 'Deltoid', pos: new THREE.Vector3(-0.12, 1.48, 0.04) },
-      { key: 'arms', label: 'Biceps Brachii', pos: new THREE.Vector3(-0.09, 1.22, 0.08) },
-      { key: 'arms', label: 'Brachialis', pos: new THREE.Vector3(-0.16, 1.07, 0.05) },
-      { key: 'shoulders', label: 'Rotator Cuff', pos: new THREE.Vector3(0.04, 1.60, -0.05) },
-      { key: 'chest', label: 'Pectoralis Major', pos: new THREE.Vector3(0.12, 1.44, 0.10) }
+      { key: 'shoulder', label: 'Deltoid & Rotator Cuff', pos: new THREE.Vector3(-0.24, 1.34, 0.05) },
+      { key: 'forearm', label: 'Biceps & Forearm', pos: new THREE.Vector3(-0.28, 1.02, 0.08) },
+      { key: 'chest', label: 'Pectoralis Major', pos: new THREE.Vector3(0.08, 1.28, 0.12) },
+      { key: 'core', label: 'Rectus Abdominis', pos: new THREE.Vector3(0.0, 0.96, 0.12) },
+      { key: 'pelvis', label: 'Pelvis & Gluteals', pos: new THREE.Vector3(0.12, 0.74, 0.08) },
+      { key: 'thigh', label: 'Quadriceps Femoris', pos: new THREE.Vector3(0.12, 0.38, 0.10) },
+      { key: 'leg', label: 'Gastrocnemius & Tibia', pos: new THREE.Vector3(0.12, -0.12, 0.08) }
     ];
 
     pinConfigs.forEach((cfg, idx) => {
@@ -758,20 +789,20 @@ class AnatoMeDiorama {
       pinObj.userData = { key: cfg.key, basePos: cfg.pos.clone(), index: idx };
 
       // Pearl Head
-      const headGeom = new THREE.SphereGeometry(0.024, 16, 12);
+      const headGeom = new THREE.SphereGeometry(0.026, 16, 12);
       const headMat = new THREE.MeshBasicMaterial({ color: 0x5ECDBB });
       const head = new THREE.Mesh(headGeom, headMat);
       pinObj.add(head);
 
       // Stem
-      const stemGeom = new THREE.CylinderGeometry(0.005, 0.005, 0.035, 8);
+      const stemGeom = new THREE.CylinderGeometry(0.005, 0.005, 0.038, 8);
       const stemMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
       const stem = new THREE.Mesh(stemGeom, stemMat);
-      stem.position.y = -0.02;
+      stem.position.y = -0.022;
       pinObj.add(stem);
 
       // Glowing Pulsing Aura Ring
-      const ringGeom = new THREE.RingGeometry(0.022, 0.040, 16);
+      const ringGeom = new THREE.RingGeometry(0.024, 0.044, 16);
       const ringMat = new THREE.MeshBasicMaterial({
         color: 0x98EADF,
         transparent: true,
@@ -780,7 +811,7 @@ class AnatoMeDiorama {
       });
       const ring = new THREE.Mesh(ringGeom, ringMat);
       ring.rotation.x = Math.PI / 2;
-      ring.position.y = -0.036;
+      ring.position.y = -0.040;
       pinObj.add(ring);
 
       pinObj.head = head;
@@ -791,6 +822,25 @@ class AnatoMeDiorama {
     });
 
     this.dioramaGroup.add(this.pinsGroup);
+  }
+
+  // Camera Smooth Focus / Zoom Tween
+  focusRegion(regionKey) {
+    this.activeRegion = regionKey;
+    const preset = this.cameraPresets[regionKey] || this.cameraPresets.fullbody;
+    this.targetCamPos.copy(preset.camPos);
+    this.targetLookAt.copy(preset.target);
+
+    // Update 3D Pins visual state
+    this.pins.forEach(pin => {
+      const isActive = pin.userData.key === regionKey;
+      pin.head.material.color.setHex(isActive ? 0xFCD45A : 0x5ECDBB);
+      pin.ring.material.color.setHex(isActive ? 0xFFF2A8 : 0x98EADF);
+    });
+
+    if (this.isIsolated) {
+      this.applyIsolationVisuals();
+    }
   }
 
   setupEvents() {
@@ -851,21 +901,32 @@ class AnatoMeDiorama {
           }
         }
 
-        // 2. Direct Muscle Mesh Click Detection (Real anatomical models)
+        // 2. Direct Muscle Mesh Click Detection across 960 Anatomical Meshes
         if (this.allMeshes.length > 0) {
           const meshIntersects = this.raycaster.intersectObjects(this.allMeshes);
           if (meshIntersects.length > 0) {
             const hitMesh = meshIntersects[0].object;
             const hitName = hitMesh.name.toLowerCase();
 
-            if (hitName.includes('biceps') || hitName.includes('brachialis') || hitName.includes('triceps') || hitName.includes('radius') || hitName.includes('ulna')) {
-              selectRegion('arms');
-            } else if (hitName.includes('pectoralis')) {
-              selectRegion('chest');
-            } else {
-              selectRegion('shoulders');
+            let targetChunk = 'fullbody';
+            if (hitName.includes('biceps') || hitName.includes('triceps') || hitName.includes('radius') || hitName.includes('ulna') || hitName.includes('forearm')) {
+              targetChunk = 'forearm';
+            } else if (hitName.includes('deltoid') || hitName.includes('clavicle') || hitName.includes('scapula') || hitName.includes('rotator')) {
+              targetChunk = 'shoulder';
+            } else if (hitName.includes('pectoralis') || hitName.includes('sternum') || hitName.includes('rib') || hitName.includes('chest')) {
+              targetChunk = 'chest';
+            } else if (hitName.includes('rectus abdominis') || hitName.includes('oblique') || hitName.includes('lumbar')) {
+              targetChunk = 'core';
+            } else if (hitName.includes('pelvis') || hitName.includes('ilium') || hitName.includes('gluteus')) {
+              targetChunk = 'pelvis';
+            } else if (hitName.includes('femur') || hitName.includes('quadriceps') || hitName.includes('patella')) {
+              targetChunk = 'thigh';
+            } else if (hitName.includes('tibia') || hitName.includes('gastrocnemius') || hitName.includes('foot')) {
+              targetChunk = 'leg';
             }
-            toast(`✦ Selected: ${hitMesh.name.replace(/_/g, ' ').replace(/\.r/g, ' (Right)')}`);
+
+            selectRegion(targetChunk);
+            toast(`✦ Selected: ${hitMesh.name.replace(/_/g, ' ').replace(/\.r/g, ' (R)').replace(/\.l/g, ' (L)')}`);
           }
         }
       }
@@ -898,22 +959,10 @@ class AnatoMeDiorama {
     this.targetRotX = 0;
   }
 
-  setActiveRegion(regionKey) {
-    this.activeRegion = regionKey;
-    this.pins.forEach(pin => {
-      const isActive = pin.userData.key === regionKey;
-      pin.head.material.color.setHex(isActive ? 0xFCD45A : 0x5ECDBB);
-      pin.ring.material.color.setHex(isActive ? 0xFFF2A8 : 0x98EADF);
-    });
-
-    if (this.isIsolated) {
-      this.applyIsolationVisuals();
-    }
-  }
-
   setPeelLayer(layerNum) {
     this.currentPeelLayer = layerNum;
 
+    // Globally filter all 960 meshes by layer
     this.allMeshes.forEach(mesh => {
       const meshLayer = mesh.userData.layer !== undefined ? mesh.userData.layer : 2;
       mesh.visible = (meshLayer <= layerNum);
@@ -936,7 +985,7 @@ class AnatoMeDiorama {
   applyIsolationVisuals() {
     const isIso = this.isIsolated;
     const activeKey = this.activeRegion;
-    const activeMeshes = this.regionMeshes[activeKey] || [];
+    const activeMeshes = (activeKey === 'fullbody') ? this.allMeshes : (this.regionMeshes[activeKey] || []);
 
     this.allMeshes.forEach(mesh => {
       const isTarget = activeMeshes.includes(mesh);
@@ -957,11 +1006,17 @@ class AnatoMeDiorama {
     const dt = this.clock.getDelta();
     const elapsedTime = this.clock.getElapsedTime();
 
-    // 1. Smooth Spring Turntable Orbit
+    // 1. Smooth Camera Focus Transition (Tweening)
+    this.currentCamPos.lerp(this.targetCamPos, 0.08);
+    this.currentLookAt.lerp(this.targetLookAt, 0.08);
+    this.camera.position.copy(this.currentCamPos);
+    this.camera.lookAt(this.currentLookAt);
+
+    // 2. Smooth Spring Turntable Orbit
     this.dioramaGroup.rotation.y += (this.targetRotY - this.dioramaGroup.rotation.y) * 0.12;
     this.dioramaGroup.rotation.x += (this.targetRotX - this.dioramaGroup.rotation.x) * 0.12;
 
-    // 2. Floating 3D Collectible Pins Animation (Sine-wave bobbing + ring pulse)
+    // 3. Floating 3D Collectible Pins Animation (Sine-wave bobbing + ring pulse)
     this.pins.forEach(pin => {
       const idx = pin.userData.index;
       pin.position.y = pin.userData.basePos.y + Math.sin(elapsedTime * 2.8 + idx * 0.9) * 0.015;
@@ -969,27 +1024,23 @@ class AnatoMeDiorama {
       pin.ring.scale.set(ringScale, ringScale, 1.0);
     });
 
-    // 3. Kinesiology Action Kinematics on Real Z-Anatomy Meshes
+    // 4. Kinesiology Action Kinematics on Real Meshes
     if (this.isKinesiologyPlaying) {
       this.actionPhase += dt * 3.2;
       const flexionCycle = (Math.sin(this.actionPhase) * 0.5 + 0.5);
 
-      // Dynamic Biceps Physiological Bulge
       this.bicepsBellies.forEach(belly => {
         belly.scale.set(1.0 + flexionCycle * 0.28, 1.0 - flexionCycle * 0.16, 1.0 + flexionCycle * 0.28);
       });
 
-      // Reciprocal Triceps Lengthening
       this.tricepsBellies.forEach(belly => {
         belly.scale.set(1.0 - flexionCycle * 0.10, 1.0 + flexionCycle * 0.14, 1.0 - flexionCycle * 0.10);
       });
 
-      // Forearm Bone Flexion around elbow joint
       this.forearmBones.forEach(bone => {
         bone.rotation.x = flexionCycle * 0.35;
       });
     } else {
-      // Easing back to neutral anatomical rest position
       this.bicepsBellies.forEach(belly => {
         belly.scale.lerp(new THREE.Vector3(1, 1, 1), 0.12);
       });
@@ -1013,6 +1064,5 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Initialize UI Stats & Region
+// Initialize UI Stats
 renderStats();
-selectRegion('shoulders');
