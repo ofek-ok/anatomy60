@@ -3,51 +3,292 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0d0e10" />
-  <meta name="description" content="A focused, interactive 60-day human anatomy learning dashboard." />
-  <title>Anatomy60 — Learn the body, one day at a time</title>
+  <meta name="theme-color" content="#F8F6F2" />
+  <meta name="description" content="AnatoMe — Medical precision meets cozy gaming. An interactive, complete human anatomy reference." />
+  <title>AnatoMe — Medical Precision meets Cozy Gaming</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/styles.css" />
 </head>
 <body>
   <aside class="sidebar">
-    <a class="brand" href="#home" aria-label="Anatomy60 home"><span>ANATOMY</span><b>60</b><small>DAY <span id="side-day">1</span> / 60</small></a>
-    <div class="streak-pill"><span>ϟ</span><strong id="side-xp">0</strong><small>XP</small></div>
+    <a class="brand" href="#home" aria-label="AnatoMe home">
+      <img src="/assets/anatome-logo.jpg" alt="AnatoMe mascot" class="brand-mascot" />
+      <div class="brand-copy">
+        <span class="brand-title">Anato<b class="brand-accent">Me</b></span>
+        <small class="brand-sub">COZY ANATOMY · DAY <span id="side-day">1</span>/60</small>
+      </div>
+    </a>
+    <div class="streak-pill">
+      <span class="pill-spark">✦</span>
+      <strong id="side-xp">0</strong>
+      <small>XP</small>
+    </div>
     <nav class="nav" aria-label="Main navigation">
       <button class="nav-link active" data-view="home"><span>⌂</span><span data-en="Home" data-he="בית">Home</span></button>
-      <button class="nav-link" data-view="learn"><span>▤</span><span data-en="Learn" data-he="ללמוד">Learn</span></button>
-      <button class="nav-link" data-view="explore"><span>◉</span><span data-en="Explore Body" data-he="אטלס הגוף">Explore Body</span></button>
-      <button class="nav-link" data-view="profile"><span>♙</span><span data-en="Profile" data-he="הפרופיל שלי">Profile</span></button>
+      <button class="nav-link" data-view="learn"><span>▤</span><span data-en="Curriculum" data-he="תוכנית למידה">Curriculum</span></button>
+      <button class="nav-link" data-view="explore"><span>◉</span><span data-en="3D Atlas & Diorama" data-he="אטלס ודיורמה">3D Atlas & Diorama</span></button>
+      <button class="nav-link" data-view="profile"><span>♙</span><span data-en="Learner Profile" data-he="פרופיל אישי">Learner Profile</span></button>
     </nav>
-    <div class="sidebar-bottom"><span class="muted" data-en="LANGUAGE" data-he="שפה">LANGUAGE</span><div class="lang-toggle"><button class="lang-choice selected" data-lang="en">🇺🇸 EN</button><button class="lang-choice" data-lang="he">🇮🇱 עב</button></div></div>
+    <div class="sidebar-bottom">
+      <span class="muted" data-en="LANGUAGE / שפה" data-he="שפה / LANGUAGE">LANGUAGE</span>
+      <div class="lang-toggle">
+        <button class="lang-choice selected" data-lang="en">🇺🇸 EN</button>
+        <button class="lang-choice" data-lang="he">🇮🇱 עב</button>
+      </div>
+    </div>
   </aside>
 
   <main class="main-wrap">
-    <header class="topbar"><div class="mobile-brand">ANATOMY<b>60</b></div><div class="topbar-right"><span class="top-xp">ϟ <b id="top-xp">0</b></span><button id="top-lang" class="top-lang" aria-label="Switch language">🇮🇱 עב</button><button class="mobile-menu" id="mobile-menu" aria-label="Open navigation">☰</button></div></header>
+    <header class="topbar">
+      <div class="mobile-brand">
+        <img src="/assets/anatome-logo.jpg" alt="AnatoMe" class="mobile-mascot" />
+        <span>Anato<b>Me</b></span>
+      </div>
+      <div class="topbar-right">
+        <span class="top-xp">✦ <b id="top-xp">0</b> XP</span>
+        <button id="top-lang" class="top-lang" aria-label="Switch language">🇮🇱 עב</button>
+        <button class="mobile-menu" id="mobile-menu" aria-label="Open navigation">☰</button>
+      </div>
+    </header>
+
     <div id="app" class="content">
+      <!-- VIEW: HOME -->
       <section id="view-home" class="view">
-        <div class="welcome-row"><div><p class="eyebrow" data-en="YOUR DAILY PRACTICE" data-he="הלמידה היומית שלך">YOUR DAILY PRACTICE</p><h1 data-en="Build your anatomy map." data-he="בונים את מפת האנטומיה שלך.">Build your anatomy map.</h1><p class="intro" data-en="Small, focused lessons. A clearer picture of the human body every day." data-he="שיעורים ממוקדים וקצרים. בכל יום התמונה של גוף האדם מתבהרת.">Small, focused lessons. A clearer picture of the human body every day.</p></div><div class="day-badge"><span>DAY</span><b id="day-badge-num">01</b><small>OF 60</small></div></div>
+        <div class="welcome-row">
+          <div>
+            <p class="eyebrow" data-en="MEDICAL PRECISION · COZY GAMING" data-he="דיוק רפואי · עולם נעים ומזמין">MEDICAL PRECISION · COZY GAMING</p>
+            <h1 data-en="Welcome to AnatoMe." data-he="ברוכים הבאים ל-AnatoMe.">Welcome to AnatoMe.</h1>
+            <p class="intro" data-en="A joyful, complete human anatomy map for students and clinicians. Soft aesthetics, rigorous medical precision." data-he="מפת אנטומיה מלאה, מדויקת ומזמינה לסטודנטים ולמטפלים. אסתטיקה חמימה עם דיוק רפואי מחמיר.">A joyful, complete human anatomy map for students and clinicians. Soft aesthetics, rigorous medical precision.</p>
+          </div>
+          <div class="day-badge">
+            <span>DAY</span>
+            <b id="day-badge-num">01</b>
+            <small>OF 60</small>
+          </div>
+        </div>
+
         <article class="lesson-card">
-          <div class="card-top"><div><p class="card-kicker"><span class="icon-book">▤</span> <span data-en="CONTINUE LEARNING" data-he="ממשיכים ללמוד">CONTINUE LEARNING</span></p><p class="card-day" id="lesson-day-label">Day 1 of 60</p></div><span class="time-est">◷ &nbsp;~20 MIN</span></div>
-          <h2 id="lesson-title" data-en="Anatomical Language" data-he="שפה אנטומית">Anatomical Language</h2><p id="lesson-subtitle" class="lesson-desc" data-en="Anatomical position, directional planes, and patient orientation" data-he="מנח אנטומי, מישורי תנועה והתמצאות במרחב">Anatomical position, directional planes, and patient orientation</p>
-          <div class="lesson-footer"><div class="lesson-progress"><span id="lesson-progress-fill"></span></div><span id="lesson-progress-text">0% complete</span></div>
-          <button class="button button-lime full-button" id="continue-button"><span data-en="CONTINUE LESSON" data-he="להמשיך לשיעור">CONTINUE LESSON</span><span>→</span></button>
+          <div class="card-top">
+            <div>
+              <p class="card-kicker"><span class="icon-book">▤</span> <span data-en="DAILY CLINICAL LESSON" data-he="שיעור קליני יומי">DAILY CLINICAL LESSON</span></p>
+              <p class="card-day" id="lesson-day-label">Day 1 of 60</p>
+            </div>
+            <span class="time-est">◷ ~20 MIN</span>
+          </div>
+          <h2 id="lesson-title" data-en="Anatomical Language & Planes" data-he="שפה אנטומית ומישורי תנועה">Anatomical Language & Planes</h2>
+          <p id="lesson-subtitle" class="lesson-desc" data-en="Anatomical position, directional terminology, and spatial axes." data-he="מנח אנטומי, מישורי תנועה והתמצאות במרחב">Anatomical position, directional terminology, and spatial axes.</p>
+          <div class="lesson-footer">
+            <div class="lesson-progress"><span id="lesson-progress-fill"></span></div>
+            <span id="lesson-progress-text">0% complete</span>
+          </div>
+          <button class="button button-primary full-button" id="continue-button">
+            <span data-en="CONTINUE LESSON" data-he="להמשיך לשיעור">CONTINUE LESSON</span>
+            <span>→</span>
+          </button>
         </article>
-        <article class="atlas-card"><div class="atlas-card-copy"><p class="card-kicker"><span class="icon-compass">◉</span> <span data-en="EXPLORE THE BODY" data-he="חוקרים את הגוף">EXPLORE THE BODY</span></p><span class="atlas-meta" data-en="MUSCLES · BONES · JOINTS" data-he="שרירים · עצמות · מפרקים">MUSCLES · BONES · JOINTS</span><h2 data-en="Interactive Anatomy Atlas" data-he="אטלס אנטומי אינטראקטיבי">Interactive Anatomy Atlas</h2><p data-en="Select a body region to explore its structures, actions, and palpation notes." data-he="בחרו אזור בגוף כדי ללמוד על המבנים, הפעולות והנחיות המישוש.">Select a body region to explore its structures, actions, and palpation notes.</p><button class="button button-dark full-button" data-goto="explore"><span data-en="OPEN THE ATLAS" data-he="לפתוח את האטלס">OPEN THE ATLAS</span><span>↗</span></button></div><div class="mini-body" aria-hidden="true"><div class="mini-orbit orbit-one"></div><div class="mini-orbit orbit-two"></div><svg viewBox="0 0 120 220"><circle cx="60" cy="24" r="15"/><path d="M44 45 Q60 38 76 45 L83 91 L74 99 L79 147 L72 214 L60 216 L56 157 L52 216 L40 214 L45 147 L48 99 L37 91Z"/><path d="M39 53 L22 102 L16 141 L23 143 L38 110 M81 53 L98 102 L104 141 L97 143 L82 110"/></svg><span class="body-dot"></span></div></article>
-        <section class="stats-row"><div class="stat"><span class="stat-icon fire">♨</span><div><b id="streak-count">0</b><small data-en="DAY STREAK" data-he="ימי רצף">DAY STREAK</small></div></div><div class="stat"><span class="stat-icon">✦</span><div><b id="mastered-count">0</b><small data-en="MASTERED" data-he="נושאים שהושלמו">MASTERED</small></div></div><div class="stat"><span class="stat-icon">◷</span><div><b><span id="days-count">0</span> / 60</b><small data-en="DAYS DONE" data-he="ימים שהושלמו">DAYS DONE</small></div></div></section>
-        <section class="week-section"><div class="section-heading"><div><p class="eyebrow" data-en="KEEP YOUR RHYTHM" data-he="שומרים על הרצף">KEEP YOUR RHYTHM</p><h2 data-en="This week" data-he="השבוע">This week</h2></div><span class="muted" data-en="7 DAY VIEW" data-he="תצוגת 7 ימים">7 DAY VIEW</span></div><div class="week-strip" id="week-strip"></div></section>
+
+        <article class="atlas-card">
+          <div class="atlas-card-copy">
+            <p class="card-kicker"><span class="icon-compass">◉</span> <span data-en="TACTILE DIORAMA ATLAS" data-he="אטלס דיורמה אינטראקטיבי">TACTILE DIORAMA ATLAS</span></p>
+            <span class="atlas-meta" data-en="206 BONES · 640 MUSCLES · PEELABLE LAYERS" data-he="206 עצמות · 640 שרירים · שכבות">206 BONES · 640 MUSCLES · PEELABLE LAYERS</span>
+            <h2 data-en="Explore the 3D Musculoskeletal Map" data-he="סיור במפת השרירים והשלד">Explore the 3D Musculoskeletal Map</h2>
+            <p data-en="Peel through skin, superficial muscles, deep stabilizers, and bones. Tap to inspect exact Origins and Insertions." data-he="קלפו שכבות עור, שרירים שטחיים, מייצבים עמוקים ושלד. הקישו כדי לבחון נקודות מוצא ואחיזה מדויקות.">Peel through skin, superficial muscles, deep stabilizers, and bones. Tap to inspect exact Origins and Insertions.</p>
+            <button class="button button-peach full-button" data-goto="explore">
+              <span data-en="OPEN DIORAMA ATLAS" data-he="פתיחת האטלס">OPEN DIORAMA ATLAS</span>
+              <span>↗</span>
+            </button>
+          </div>
+          <div class="mini-mascot-card">
+            <img src="/assets/anatome-logo.jpg" alt="Mascot" class="mini-mascot-img" />
+            <span class="mascot-bubble" data-en="Let's study!" data-he="בואו נלמד!">Let's study!</span>
+          </div>
+        </article>
+
+        <section class="stats-row">
+          <div class="stat"><span class="stat-icon flame">✦</span><div><b id="streak-count">0</b><small data-en="DAY STREAK" data-he="ימי רצף">DAY STREAK</small></div></div>
+          <div class="stat"><span class="stat-icon heart">♥</span><div><b id="mastered-count">0</b><small data-en="MASTERED" data-he="הושלמו">MASTERED</small></div></div>
+          <div class="stat"><span class="stat-icon clock">◷</span><div><b><span id="days-count">0</span> / 60</b><small data-en="DAYS COMPLETE" data-he="ימים הושלמו">DAYS COMPLETE</small></div></div>
+        </section>
+
+        <section class="week-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow" data-en="WEEKLY RHYTHM" data-he="רצף שבועי">WEEKLY RHYTHM</p>
+              <h2 data-en="Your Study Cadence" data-he="קצב הלמידה שלך">Your Study Cadence</h2>
+            </div>
+            <span class="muted" data-en="7 DAY OVERVIEW" data-he="תצוגה שבועית">7 DAY OVERVIEW</span>
+          </div>
+          <div class="week-strip" id="week-strip"></div>
+        </section>
       </section>
 
-      <section id="view-learn" class="view hidden"><div class="page-heading"><p class="eyebrow" data-en="THE 60-DAY JOURNEY" data-he="מסע של 60 ימים">THE 60-DAY JOURNEY</p><h1 data-en="Learn in clear steps." data-he="לומדים בצעדים ברורים.">Learn in clear steps.</h1><p class="intro" data-en="A practical path from anatomical language to regional anatomy." data-he="מסלול מעשי משפה אנטומית ועד לאנטומיה אזורית.">A practical path from anatomical language to regional anatomy.</p></div><div class="journey-summary"><div><span class="summary-label" data-en="YOUR PROGRESS" data-he="ההתקדמות שלך">YOUR PROGRESS</span><b><span id="journey-days">0</span><small> / 60 DAYS</small></b></div><div class="journey-progress"><span id="journey-progress-fill"></span></div><span class="summary-percent" id="journey-percent">0%</span></div><div id="journey-list" class="journey-list"></div></section>
+      <!-- VIEW: LEARN / CURRICULUM -->
+      <section id="view-learn" class="view hidden">
+        <div class="page-heading">
+          <p class="eyebrow" data-en="THE 60-DAY CLINICAL MAP" data-he="תוכנית 60 הימים הקלינית">THE 60-DAY CLINICAL MAP</p>
+          <h1 data-en="Medical Precision, One Day at a Time." data-he="דיוק רפואי, יום אחר יום.">Medical Precision, One Day at a Time.</h1>
+          <p class="intro" data-en="Structured by functional kinetic chains—from skeletal landmarks to complex muscle synergies." data-he="בנוי לפי שרשראות קינטיות ותפקודיות — מציוני דרך של השלד ועד לשרירים מורכבים.">Structured by functional kinetic chains—from skeletal landmarks to complex muscle synergies.</p>
+        </div>
+        <div class="journey-summary">
+          <div>
+            <span class="summary-label" data-en="PROGRESS" data-he="התקדמות">PROGRESS</span>
+            <b><span id="journey-days">0</span><small> / 60 DAYS</small></b>
+          </div>
+          <div class="journey-progress"><span id="journey-progress-fill"></span></div>
+          <span class="summary-percent" id="journey-percent">0%</span>
+        </div>
+        <div id="journey-list" class="journey-list"></div>
+      </section>
 
-      <section id="view-explore" class="view hidden"><div class="page-heading"><p class="eyebrow" data-en="INTERACTIVE ANATOMY ATLAS" data-he="אטלס אנטומי אינטראקטיבי">INTERACTIVE ANATOMY ATLAS</p><h1 data-en="Explore the body." data-he="חוקרים את הגוף.">Explore the body.</h1><p class="intro" data-en="Choose a region to see key structures and what they do." data-he="בחרו אזור כדי להכיר מבנים מרכזיים ואת תפקידם.">Choose a region to see key structures and what they do.</p></div><div class="explore-layout"><div class="body-stage"><div class="body-tabs"><button class="body-tab selected" data-viewbody="front" data-en="FRONT" data-he="קדמי">FRONT</button><button class="body-tab" data-viewbody="back" data-en="BACK" data-he="אחורי">BACK</button></div><div class="body-figure"><svg viewBox="0 0 280 480" class="human-svg" role="img" aria-label="Interactive human body map"><circle class="bone" cx="140" cy="49" r="33"/><path class="bone" d="M111 88 Q140 76 169 88 L185 168 L176 211 L168 269 L180 432 Q164 448 149 436 L140 292 L130 436 Q112 448 98 432 L112 269 L104 211 L95 168Z"/><path class="bone" d="M103 100 L67 190 L40 296 Q46 309 58 301 L99 217 M177 100 L213 190 L240 296 Q234 309 222 301 L181 217"/><path class="line" d="M140 96V245 M108 149H172 M113 260H167 M140 291L116 431 M140 291L164 431"/><path class="muscle" d="M109 100 Q88 105 95 132 L113 149 L132 138 L130 105Z"/><path class="muscle" d="M171 100 Q192 105 185 132 L167 149 L148 138 L150 105Z"/><path class="muscle" d="M112 155 Q140 147 168 155 L163 230 Q140 244 117 230Z"/><path class="muscle" d="M99 108 Q79 111 73 162 L64 205 L78 212 L99 169 L108 133Z"/><path class="muscle" d="M181 108 Q201 111 207 162 L216 205 L202 212 L181 169 L172 133Z"/><path class="muscle" d="M119 247 Q140 256 161 247 L157 301 L140 309 L123 301Z"/><path class="muscle" d="M122 312 L138 316 L130 415 L109 422 L113 354Z"/><path class="muscle" d="M158 312 L142 316 L150 415 L171 422 L167 354Z"/></svg><button class="region-point point-shoulder" data-region="shoulders" aria-label="Shoulders"></button><button class="region-point point-chest" data-region="chest" aria-label="Chest"></button><button class="region-point point-arm" data-region="arms" aria-label="Arms"></button><button class="region-point point-core" data-region="core" aria-label="Core"></button><button class="region-point point-legs" data-region="legs" aria-label="Legs"></button><span class="figure-caption" id="figure-caption">ANTERIOR VIEW</span></div><div class="body-legend"><span><i class="legend-dot lime"></i><span data-en="Muscle groups" data-he="קבוצות שרירים">Muscle groups</span></span><span><i class="legend-dot gray"></i><span data-en="Skeletal landmarks" data-he="ציוני דרך של השלד">Skeletal landmarks</span></span></div></div><aside class="region-panel"><div class="panel-eyebrow" data-en="SELECTED REGION" data-he="האזור שנבחר">SELECTED REGION</div><h2 id="region-title" data-en="Choose a region" data-he="בחרו אזור">Choose a region</h2><p id="region-description" class="region-description" data-en="Tap one of the highlighted points on the body map to start exploring." data-he="לחצו על אחת הנקודות במפת הגוף כדי להתחיל לחקור.">Tap one of the highlighted points on the body map to start exploring.</p><div id="region-content" class="region-content"><div class="empty-hint">✦ <span data-en="Anatomy details appear here" data-he="פרטי האנטומיה יופיעו כאן">Anatomy details appear here</span></div></div></aside></div></section>
+      <!-- VIEW: EXPLORE / 3D DIORAMA ATLAS -->
+      <section id="view-explore" class="view hidden">
+        <div class="page-heading">
+          <p class="eyebrow" data-en="INTERACTIVE MUSCULOSKELETAL DIORAMA" data-he="דיורמה אנטומית אינטראקטיבית">INTERACTIVE MUSCULOSKELETAL DIORAMA</p>
+          <h1 data-en="Interactive Anatomy Diorama." data-he="חוקרים את הגוף בדיורמה.">Interactive Anatomy Diorama.</h1>
+          <p class="intro" data-en="Peel through anatomical layers, isolate kinetic chains, and inspect Origin (Mint) and Insertion (Butter Yellow) attachment points." data-he="קלפו שכבות אנטומיות, בודדו שרשראות תנועה וחקרו נקודות מוצא (מנטה) ואחיזה (צהוב חמאה).">Peel through anatomical layers, isolate kinetic chains, and inspect Origin (Mint) and Insertion (Butter Yellow) attachment points.</p>
+        </div>
 
-      <section id="view-profile" class="view hidden"><div class="page-heading"><p class="eyebrow" data-en="YOUR LEARNING PROFILE" data-he="פרופיל הלמידה שלך">YOUR LEARNING PROFILE</p><h1 data-en="Progress that adds up." data-he="כל יום מקדם אותך.">Progress that adds up.</h1><p class="intro" data-en="Your study activity is saved on this device." data-he="נתוני הלמידה נשמרים במכשיר הזה.">Your study activity is saved on this device.</p></div><div class="profile-card"><div class="avatar">A<span>60</span></div><div><p class="eyebrow" data-en="ANATOMY LEARNER" data-he="לומד אנטומיה">ANATOMY LEARNER</p><h2 data-en="Your 60-day plan" data-he="תוכנית 60 הימים שלך">Your 60-day plan</h2><p class="lesson-desc" data-en="One focused lesson at a time." data-he="שיעור ממוקד אחד בכל פעם.">One focused lesson at a time.</p></div></div><div class="profile-stats"><div class="profile-stat"><b id="profile-days">0</b><span data-en="DAYS COMPLETE" data-he="ימים שהושלמו">DAYS COMPLETE</span></div><div class="profile-stat"><b id="profile-xp">0</b><span>XP</span></div><div class="profile-stat"><b id="profile-streak">0</b><span data-en="DAY STREAK" data-he="ימי רצף">DAY STREAK</span></div></div><button class="button button-outline" id="reset-progress" data-en="RESET LOCAL PROGRESS" data-he="איפוס ההתקדמות המקומית">RESET LOCAL PROGRESS</button></section>
+        <div class="explore-layout">
+          <div class="body-stage">
+            <div class="stage-top-controls">
+              <div class="body-tabs">
+                <button class="body-tab selected" data-viewbody="front" data-en="ANTERIOR (FRONT)" data-he="מבט קדמי">ANTERIOR</button>
+                <button class="body-tab" data-viewbody="back" data-en="POSTERIOR (BACK)" data-he="מבט אחורי">POSTERIOR</button>
+              </div>
+            </div>
+
+            <div class="diorama-container">
+              <!-- CHUNKY VERTICAL PEEL SLIDER -->
+              <div class="peel-slider-wrap" title="Peel anatomical layers">
+                <span class="peel-label" data-en="PEEL" data-he="שכבה">PEEL</span>
+                <div class="peel-steps">
+                  <button class="peel-step selected" data-layer="3" title="Layer 3: Skin Silhouette">
+                    <span class="step-icon">👤</span>
+                    <small>Skin</small>
+                  </button>
+                  <button class="peel-step" data-layer="2" title="Layer 2: Superficial Muscles">
+                    <span class="step-icon">🌸</span>
+                    <small>Superficial</small>
+                  </button>
+                  <button class="peel-step" data-layer="1" title="Layer 1: Deep Muscles">
+                    <span class="step-icon">🍁</span>
+                    <small>Deep</small>
+                  </button>
+                  <button class="peel-step" data-layer="0" title="Layer 0: Complete Skeleton">
+                    <span class="step-icon">🦴</span>
+                    <small>Skeleton</small>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 3D FIGURE DIORAMA -->
+              <div class="body-figure" id="figure-wrap">
+                <div class="diorama-pedestal"></div>
+                <svg viewBox="0 0 280 480" class="human-svg" role="img" aria-label="Interactive human anatomy diorama">
+                  <!-- Skeletal Base (Layer 0) -->
+                  <g class="layer-skeleton">
+                    <circle class="bone skull" cx="140" cy="49" r="33"/>
+                    <path class="bone spine-ribs" d="M111 88 Q140 76 169 88 L185 168 L176 211 L168 269 L180 432 Q164 448 149 436 L140 292 L130 436 Q112 448 98 432 L112 269 L104 211 L95 168Z"/>
+                    <path class="bone limbs" d="M103 100 L67 190 L40 296 Q46 309 58 301 L99 217 M177 100 L213 190 L240 296 Q234 309 222 301 L181 217"/>
+                    <path class="bone-line" d="M140 96V245 M108 149H172 M113 260H167 M140 291L116 431 M140 291L164 431"/>
+                  </g>
+                  <!-- Deep Muscles (Layer 1) -->
+                  <g class="layer-deep">
+                    <path class="muscle deep-rotator" d="M116 110 Q98 116 102 138 L114 148 L128 139 L126 112Z"/>
+                    <path class="muscle deep-rotator" d="M164 110 Q182 116 178 138 L166 148 L152 139 L154 112Z"/>
+                    <path class="muscle deep-core" d="M118 165 Q140 158 162 165 L158 222 Q140 234 122 222Z"/>
+                  </g>
+                  <!-- Superficial Muscles (Layer 2) -->
+                  <g class="layer-superficial">
+                    <path class="muscle deltoid" d="M109 100 Q88 105 95 132 L113 149 L132 138 L130 105Z"/>
+                    <path class="muscle deltoid" d="M171 100 Q192 105 185 132 L167 149 L148 138 L150 105Z"/>
+                    <path class="muscle pectoralis" d="M112 155 Q140 147 168 155 L163 230 Q140 244 117 230Z"/>
+                    <path class="muscle biceps" d="M99 108 Q79 111 73 162 L64 205 L78 212 L99 169 L108 133Z"/>
+                    <path class="muscle biceps" d="M181 108 Q201 111 207 162 L216 205 L202 212 L181 169 L172 133Z"/>
+                    <path class="muscle glute-quad" d="M119 247 Q140 256 161 247 L157 301 L140 309 L123 301Z"/>
+                    <path class="muscle calf" d="M122 312 L138 316 L130 415 L109 422 L113 354Z"/>
+                    <path class="muscle calf" d="M158 312 L142 316 L150 415 L171 422 L167 354Z"/>
+                  </g>
+                  <!-- Skin Outline (Layer 3) -->
+                  <path class="skin-outline" d="M140 14 Q177 14 177 49 Q177 84 195 98 L244 290 Q240 314 220 305 L186 225 L182 435 Q164 455 145 440 L140 310 L135 440 Q116 455 98 435 L94 225 L60 305 Q40 314 36 290 L85 98 Q103 84 103 49 Q103 14 140 14Z"/>
+                </svg>
+
+                <!-- Interactive Region Pins -->
+                <button class="region-point point-shoulder" data-region="shoulders" aria-label="Shoulders"></button>
+                <button class="region-point point-chest" data-region="chest" aria-label="Chest"></button>
+                <button class="region-point point-arm" data-region="arms" aria-label="Arms"></button>
+                <button class="region-point point-core" data-region="core" aria-label="Core"></button>
+                <button class="region-point point-legs" data-region="legs" aria-label="Legs"></button>
+                <span class="figure-caption" id="figure-caption">ANTERIOR VIEW</span>
+              </div>
+            </div>
+
+            <div class="body-legend">
+              <span><i class="legend-pin origin"></i><span data-en="Origin (Mint)" data-he="מוצא (מנטה)">Origin (Mint)</span></span>
+              <span><i class="legend-pin insertion"></i><span data-en="Insertion (Yellow)" data-he="אחיזה (צהוב)">Insertion (Yellow)</span></span>
+              <span><i class="legend-dot muscle-dot"></i><span data-en="Muscles" data-he="שרירים">Muscles</span></span>
+              <span><i class="legend-dot bone-dot"></i><span data-en="Skeleton" data-he="שלד">Skeleton</span></span>
+            </div>
+          </div>
+
+          <!-- REGION INSPECTION PANEL -->
+          <aside class="region-panel">
+            <div class="panel-eyebrow" data-en="ANATOMICAL REGION" data-he="אזור אנטומי">ANATOMICAL REGION</div>
+            <h2 id="region-title" data-en="Select an Organ" data-he="בחרו אזור">Select an Organ</h2>
+            <p id="region-latin" class="latin-nomenclature">Musculi & Skeleton</p>
+            <p id="region-description" class="region-description" data-en="Tap any glowing point on the diorama to inspect origins, insertions, actions, and kinesiology." data-he="לחצו על אחת הנקודות הזוהרות בדיורמה כדי לחקור נקודות מוצא, אחיזה, פעולות וקינזיולוגיה.">Tap any glowing point on the diorama to inspect origins, insertions, actions, and kinesiology.</p>
+
+            <div class="action-buttons-row">
+              <button class="button button-action" id="action-play-btn">
+                <span>✦</span> <span data-en="PLAY ACTION" data-he="הפעלת תנועה">PLAY ACTION</span>
+              </button>
+              <button class="button button-isolate" id="action-isolate-btn">
+                <span>⊞</span> <span data-en="ISOLATE" data-he="בידוד מבנה">ISOLATE</span>
+              </button>
+            </div>
+
+            <div id="region-content" class="region-content">
+              <div class="empty-hint">
+                <span class="hint-spark">✦</span>
+                <span data-en="Select a region to view detailed origins, insertions, and innervation." data-he="בחרו אזור להצגת מוצא, אחיזה, עצבוב ופעולה.">Select a region to view detailed origins, insertions, and innervation.</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- VIEW: PROFILE -->
+      <section id="view-profile" class="view hidden">
+        <div class="page-heading">
+          <p class="eyebrow" data-en="STUDY PROFILE" data-he="פרופיל למידה">STUDY PROFILE</p>
+          <h1 data-en="Your Anatomy Journey." data-he="מסע הלמידה שלך.">Your Anatomy Journey.</h1>
+          <p class="intro" data-en="Track your mastery across all 60 days. Data is stored safely on this device." data-he="מעקב אחר שליטה בכל 60 הימים. הנתונים נשמרים במכשיר.">Track your mastery across all 60 days. Data is stored safely on this device.</p>
+        </div>
+        <div class="profile-card">
+          <img src="/assets/anatome-logo.jpg" alt="AnatoMe avatar" class="profile-avatar" />
+          <div>
+            <p class="eyebrow" data-en="CLINICIAN IN TRAINING" data-he="לומד אנטומיה">CLINICIAN IN TRAINING</p>
+            <h2 data-en="The 60-Day Mastery Plan" data-he="תוכנית השליטה ב-60 יום">The 60-Day Mastery Plan</h2>
+            <p class="lesson-desc" data-en="Building a permanent mental map of human structure." data-he="בניית מפה מנטלית יציבה של גוף האדם.">Building a permanent mental map of human structure.</p>
+          </div>
+        </div>
+        <div class="profile-stats">
+          <div class="profile-stat"><b id="profile-days">0</b><span data-en="DAYS COMPLETE" data-he="ימים הושלמו">DAYS COMPLETE</span></div>
+          <div class="profile-stat"><b id="profile-xp">0</b><span>XP</span></div>
+          <div class="profile-stat"><b id="profile-streak">0</b><span data-en="DAY STREAK" data-he="ימי רצף">DAY STREAK</span></div>
+        </div>
+        <button class="button button-outline" id="reset-progress" data-en="RESET LOCAL PROGRESS" data-he="איפוס התקדמות מקומית">RESET LOCAL PROGRESS</button>
+      </section>
     </div>
-    <footer class="footer"><span>ANATOMY60</span><span data-en="A little anatomy, every day." data-he="קצת אנטומיה, בכל יום.">A little anatomy, every day.</span></footer>
+
+    <footer class="footer">
+      <span>AnatoMe — Medical Precision meets Cozy Gaming</span>
+      <span data-en="Designed for doctors, therapists & students." data-he="מיועד לרופאים, מטפלים וסטודנטים.">Designed for doctors, therapists & students.</span>
+    </footer>
   </main>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="/assets/app.js" defer></script>
 </body>
