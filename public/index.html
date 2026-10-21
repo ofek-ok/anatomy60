@@ -133,11 +133,24 @@
 
     <!-- VIEW: 3D DIORAMA & INTERACTIVE ATLAS -->
     <section id="view-explore" class="mobile-view hidden">
-      <!-- TOP VIEW SWITCHER -->
-      <div class="diorama-switch-row">
-        <div class="tab-pill">
-          <button class="pill-btn selected" data-viewbody="front">ANTERIOR</button>
-          <button class="pill-btn" data-viewbody="back">POSTERIOR</button>
+      <!-- TOP VIEW SWITCHER & REGIONAL CHUNKS -->
+      <div class="diorama-controls-block">
+        <div class="diorama-switch-row">
+          <div class="tab-pill">
+            <button class="pill-btn selected" data-viewbody="front">ANTERIOR</button>
+            <button class="pill-btn" data-viewbody="back">POSTERIOR</button>
+          </div>
+        </div>
+
+        <!-- 7 CLINICAL REGIONAL CHUNKS (HORIZONTAL SCROLL) -->
+        <div class="regional-carousel">
+          <button class="region-chip active" data-chunk="shoulder">1. Shoulder & Arm</button>
+          <button class="region-chip" data-chunk="forearm">2. Forearm & Hand</button>
+          <button class="region-chip" data-chunk="chest">3. Thorax & Spine</button>
+          <button class="region-chip" data-chunk="core">4. Abdomen & Core</button>
+          <button class="region-chip" data-chunk="pelvis">5. Pelvis & Gluteal</button>
+          <button class="region-chip" data-chunk="thigh">6. Thigh & Knee</button>
+          <button class="region-chip" data-chunk="leg">7. Leg & Foot</button>
         </div>
       </div>
 

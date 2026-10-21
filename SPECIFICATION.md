@@ -1,27 +1,64 @@
 # Comprehensive Technical Specification & Master Implementation Prompt: AnatoMe
 
-## 1. Project Overview & Vision
-We are developing **AnatoMe**, a mobile 3D anatomy reference and interactive kinesiology application for medical students, clinicians, and physical therapists. 
+## 1. Project Overview & Aesthetic Direction
+We are developing **AnatoMe**, a mobile 3D anatomy and kinesiology application for medical students, clinicians, and physical therapists.
 
 ### The Core Paradigm: Medical Rigor meets "Cozy Game" Aesthetic
-- **Completeness:** 100% comprehensive anatomical coverage of the human musculoskeletal system (all ~206 bones and all ~600+ skeletal muscles, origins, insertions, innervations, and mechanical actions). No missing structures or clinical shortcuts.
-- **Aesthetic:** Unlike cold, clinical, or gory medical software, the entire visual language, UI, and rendering must feel warm, tactile, and inviting—inspired by cozy games like *Animal Crossing* and *Cozy Grove* (soft pastel palettes, matte ceramic/vinyl textures, warm rim lighting, rounded tactile UI, and playful yet precise micro-interactions).
+- **Completeness:** 100% comprehensive anatomical coverage of the human musculoskeletal system (all ~206 bones, all ~600+ skeletal muscles, discrete muscle bellies/heads, tendons, origins, insertions, innervations, and joint actions). No missing structures or clinical shortcuts.
+- **No Monolithic Meshes:** Muscles must NOT look like a fused, blurry single body mesh. Every single muscle, belly, head, and major tendon must be an individually cut, physically separate 3D mesh with visible anatomical definition and crevice depth.
+- **Aesthetic:** A warm, inviting, tactile look inspired by cozy games (*Animal Crossing*, *Cozy Grove*). Soft pastel palettes, matte ceramic/vinyl textures, warm rim lighting, and rounded tactile UI.
 
 ---
 
-## 2. Full Anatomical Data Source (100% Coverage)
-Do NOT manually type anatomical data from scratch. You will integrate an established, open-standard medical database:
+## 2. 3D Model Source & Direct Download Links (Open-Source / CC-BY-SA)
+Do NOT model anatomy from scratch. We are using the **Z-Anatomy** open-source project, which maps 100% of the human anatomy according to **Terminologia Anatomica 2 (TA2)** with pre-separated meshes:
 
-1. **Primary Database & 3D Source:** Integrate data from the **Z-Anatomy project (Terminologia Anatomica 2 / TA2)**.
-   - Website & Repositories: [https://www.z-anatomy.net/](https://www.z-anatomy.net/) / GitHub (`Z-Anatomy/Models-of-human-anatomy` & `LluisV/Z-Anatomy`).
-   - It provides a complete, peer-reviewed, open-source hierarchy of every human muscle, bone, landmark, and innervation, with matching 3D meshes pre-separated and labeled.
-2. **Alternative Data Tables:** If parsing directly from CSV/JSON, use the **Foundational Model of Anatomy (FMA)** or **OpenAnatomy** schema dumps.
+* **Official Project Site & Downloads:** [https://www.z-anatomy.com/](https://www.z-anatomy.com/)
+* **Official GitHub Repository (Blender Models & Template):** [https://github.com/Z-Anatomy/Models-of-human-anatomy](https://github.com/Z-Anatomy/Models-of-human-anatomy)
+* **Alternative Unity/Data Project Archive:** [https://github.com/moueza/Z-Anatomy](https://github.com/moueza/Z-Anatomy)
 
-Every anatomical asset in the engine must map 1:1 between its database entry (`structure_id`) and its 3D GameObject/Mesh name.
+### Model Preparation Requirements:
+1. **Mesh Separation:** Ensure every individual muscle (e.g., *Biceps Brachii Caput Longum* vs. *Caput Breve*), tendon, and bone is exported as an independent Submesh/GameObject matching its anatomical Latin/ID tag.
+2. **Tendons & Aponeuroses:** Muscles must transition into distinct matte-white/ivory tendon geometry at their insertion and origin zones (e.g., Patellar tendon, Achilles tendon, Biceps tendon, Quadriceps tendon).
+3. **Regional Chunking (Crucial for Mobile Performance & Detail):**
+   Do not render the entire 600-muscle body in a single camera viewport. Partition the model into distinct **7 Regional Views** loaded asynchronously via Addressables:
+   - **Region 1:** Cranium, Face & Cervical Spine
+   - **Region 2:** Shoulder Girdle & Brachium
+   - **Region 3:** Forearm & Hand (Intrinsic Muscles)
+   - **Region 4:** Thorax, Abdominal Wall & Spine
+   - **Region 5:** Pelvis & Gluteal Region
+   - **Region 6:** Thigh & Knee
+   - **Region 7:** Cruris (Lower Leg) & Foot
 
 ---
 
-## 3. Data Architecture & Schema
+## 3. Visual & Tech-Art System (Cozy URP Shading Pipeline)
+Set up the custom shader pipeline using **Unity URP Shader Graph** (or Godot 4 Custom Shader):
+
+1. **Custom Toon Ramp Shading (Replacing PBR):**
+   - No specular/glossy highlights (avoids wet, biological appearances). Fully matte (Roughness ~0.95).
+   - **Smooth 2-Tone Ramp:** Soft gradient transition between lit and shadowed areas.
+   - **Shadow Tint:** Never use black or gray shadows. Bones use soft lavender-ivory (`#EAE6F2`); muscles use warm rose-terracotta.
+2. **Crevice Definition & Ambient Occlusion (Inner Cuts):**
+   - Use an **Inner Crevice / Curvature / Screen-space AO pass** to render subtle, warm darkened lines in the grooves between adjacent muscle bellies. This makes every anatomical division crisp, physically separated, and clearly readable.
+3. **Subsurface Scattering (Fake SSS) & Fresnel Glow:**
+   - Gentle, light pastel Fresnel along mesh silhouettes for a soft, lively vinyl/ceramic appearance.
+4. **Tinted Inverted-Hull Outlines:**
+   - Clean, subtle outline colored as a darker tint of the organ itself (e.g., deep warm burgundy for muscles, sand-brown for bones). Never `#000000`.
+5. **Dithered Screen-Door Transparency:**
+   - When peeling layers or fading unselected muscles, use a **Screen-Door / Blue-Noise Dithered shader** in the Opaque pass to avoid mobile alpha-sorting bugs and overdraw penalties.
+
+### Color Palette Reference:
+- **Skeleton (Layer 0):** Warm Cream / Ivory (`#FDFBF7`), Matte roughness ~0.95.
+- **Tendons & Aponeuroses:** Matte Porcelain White (`#F6F3ED`), clearly separating belly from bone.
+- **Deep Muscles (Layer 1):** Muted Rose / Warm Coral (`#D97D7A`).
+- **Superficial Muscles (Layer 2):** Soft Warm Peach (`#F29E8E`).
+- **Origins (Anchors):** Glowing Mint-Turquoise pin (`#7CD9C8`).
+- **Insertions (Anchors):** Glowing Butter-Yellow pin (`#FBE38E`).
+
+---
+
+## 4. Data Architecture & Schema
 
 Implement a data-driven architecture using **ScriptableObjects (Unity)** or **Custom Resources / JSON (Godot)**. 
 

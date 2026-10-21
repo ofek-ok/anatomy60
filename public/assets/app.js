@@ -407,5 +407,27 @@ if (resetBtn) {
   };
 }
 
+// Regional Carousel Chunk Switcher
+const chunkToRegionMap = {
+  shoulder: "shoulders",
+  forearm: "arms",
+  chest: "chest",
+  core: "core",
+  pelvis: "legs",
+  thigh: "legs",
+  leg: "legs"
+};
+
+$$('.region-chip').forEach(chip => {
+  chip.onclick = () => {
+    playCozySound('pop');
+    $$('.region-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const targetRegion = chunkToRegionMap[chip.dataset.chunk] || "shoulders";
+    selectRegion(targetRegion);
+    toast(`Viewing Region: ${chip.textContent.trim()}`);
+  };
+});
+
 // Initialize
 renderStats();
