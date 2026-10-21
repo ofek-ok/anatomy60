@@ -2,27 +2,28 @@ Shader "AnatoMe/CozyToonSurface"
 {
     Properties
     {
-        [Header(Color and Lighting Ramp)]
-        _BaseColor ("Base Color", Color) = (0.95, 0.62, 0.56, 1.0)
-        _ShadowColor ("Pastel Shadow Color", Color) = (0.85, 0.49, 0.42, 1.0)
-        _RampSmoothness ("Ramp Softness", Range(0.01, 0.6)) = 0.28
-        _RampOffset ("Ramp Offset", Range(-1.0, 1.0)) = 0.05
+        [Header(1. Color and 2-Tone Ramp Lighting)]
+        _BaseColor ("Base Color (Vinyl / Ceramic)", Color) = (0.95, 0.62, 0.56, 1.0)
+        _ShadowColor ("Pastel Shadow Color (Warm Rose / Lavender)", Color) = (0.85, 0.49, 0.42, 1.0)
+        _RampSmoothness ("Soft Gradient Width", Range(0.05, 0.7)) = 0.42
+        _RampOffset ("Ramp Bias", Range(-1.0, 1.0)) = 0.02
 
-        [Header(Inter-Muscular Crevice and Inner Cuts)]
-        _CreviceColor ("Crevice Darkening Tint", Color) = (0.55, 0.24, 0.20, 1.0)
-        _CreviceDepth ("Crevice Strength", Range(0.0, 1.0)) = 0.45
+        [Header(2. Soft Ambient Occlusion and Crevices)]
+        _CreviceColor ("Groove / Crevice Tint", Color) = (0.58, 0.28, 0.24, 1.0)
+        _CreviceDepth ("Inner Crevice Depth", Range(0.0, 1.0)) = 0.55
+        _ContactAO ("Contact Shadow Depth", Range(0.0, 1.0)) = 0.4
 
-        [Header(Fake SSS and Fresnel Glow)]
-        _FresnelColor ("Fresnel / SSS Tint", Color) = (1.0, 0.92, 0.88, 1.0)
-        _FresnelPower ("Fresnel Exponent", Range(0.5, 8.0)) = 2.8
-        _FresnelIntensity ("Fresnel Intensity", Range(0.0, 2.0)) = 0.85
+        [Header(3. Soft Pastel Fresnel Rim Glow)]
+        _FresnelColor ("Fresnel Rim Glow Tint", Color) = (1.0, 0.94, 0.90, 1.0)
+        _FresnelPower ("Fresnel Wrap Exponent", Range(0.5, 6.0)) = 2.0
+        _FresnelIntensity ("Fresnel Intensity", Range(0.0, 2.5)) = 1.25
 
-        [Header(Screen Door Dither Opacity)]
+        [Header(4. Screen Door Dither Opacity)]
         _DitherFade ("Layer Peeling Visibility", Range(0.0, 1.0)) = 1.0
 
-        [Header(Inverted Hull Outline)]
-        _OutlineColor ("Outline Color (Darkened Tint)", Color) = (0.65, 0.31, 0.25, 1.0)
-        _OutlineWidth ("Outline Width", Range(0.0005, 0.015)) = 0.003
+        [Header(5. Soft Tinted Inverted Hull Outline)]
+        _OutlineColor ("Softer Outline Color (Never Pure Black)", Color) = (0.66, 0.37, 0.33, 1.0)
+        _OutlineWidth ("Outline Thickness (Half-Width)", Range(0.0005, 0.008)) = 0.0014
     }
 
     SubShader
@@ -35,7 +36,7 @@ Shader "AnatoMe/CozyToonSurface"
         }
 
         // ========================================================
-        // PASS 1: TINTED INVERTED HULL OUTLINE
+        // PASS 1: SOFTER, DISTANCE-ADAPTIVE INVERTED HULL OUTLINE
         // ========================================================
         Pass
         {
@@ -78,8 +79,14 @@ Shader "AnatoMe/CozyToonSurface"
             {
                 Varyings output;
                 float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
-                float3 positionWS = TransformObjectToWorld(input.positionOS.xyz) + normalWS * _OutlineWidth;
-                output.positionCS = TransformWorldToHClip(positionWS);
+                float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
+                
+                // Adaptive outline width: smoothly thins down in close-up inspection
+                float dist = length(GetCameraPositionWS() - worldPos);
+                float adaptiveWidth = _OutlineWidth * clamp(dist * 0.4, 0.4, 1.2);
+                
+                float3 extrudedWS = worldPos + normalWS * adaptiveWidth;
+                output.positionCS = TransformWorldToHClip(extrudedWS);
                 return output;
             }
 
@@ -95,7 +102,7 @@ Shader "AnatoMe/CozyToonSurface"
         }
 
         // ========================================================
-        // PASS 2: COZY TOON SURFACE + CREVICE + SSS
+        // PASS 2: COZY TOON + CONTACT AO + CREVICE + WIDE FRESNEL
         // ========================================================
         Pass
         {
@@ -131,6 +138,7 @@ Shader "AnatoMe/CozyToonSurface"
                 float _RampOffset;
                 float4 _CreviceColor;
                 float _CreviceDepth;
+                float _ContactAO;
                 float4 _FresnelColor;
                 float _FresnelPower;
                 float _FresnelIntensity;
@@ -155,34 +163,39 @@ Shader "AnatoMe/CozyToonSurface"
 
             half4 frag(Varyings input) : SV_Target
             {
-                // 1. Screen-Door Dithered Opacity Clipping (Zero mobile sorting glitches)
+                // 1. Screen-Door Dithered Opacity (Bayer Matrix)
                 int2 screenPixel = int2(input.positionCS.xy) % 4;
                 float threshold = bayer4x4[screenPixel.y * 4 + screenPixel.x];
                 clip(_DitherFade - threshold - 0.001);
 
-                // 2. Vectors
+                // 2. Normal, Light & View vectors
                 float3 normalWS = normalize(input.normalWS);
                 Light mainLight = GetMainLight();
                 float3 lightDirWS = normalize(mainLight.direction);
                 float3 viewDirWS = normalize(GetCameraPositionWS() - input.positionWS);
 
-                // 3. Smooth 2-Tone Half-Lambert Ramp
+                // 3. Wide Half-Lambert Soft Gradient Ramp (Rich Matte Plumpness)
                 float NdotL = dot(normalWS, lightDirWS);
                 float halfLambert = NdotL * 0.5 + 0.5;
-                float rampFactor = smoothstep(_RampOffset, _RampOffset + _RampSmoothness, halfLambert);
-                float3 surfaceColor = lerp(_ShadowColor.rgb, _BaseColor.rgb, rampFactor);
+                float ramp = smoothstep(_RampOffset, _RampOffset + _RampSmoothness, halfLambert);
+                float3 surfaceColor = lerp(_ShadowColor.rgb, _BaseColor.rgb, ramp);
 
-                // 4. Subtle Inter-Muscular Crevice / Curvature Darkening
+                // 4. Contact Ambient Occlusion (Self-Grounding & Organic Depth)
+                float groundOcclusion = saturate(normalWS.y * 0.5 + 0.5);
+                float ao = lerp(1.0 - _ContactAO, 1.0, groundOcclusion);
+                surfaceColor *= ao;
+
+                // 5. Inter-Muscular Crevice Groove Darkening
                 float curvature = length(fwidth(normalWS)) * 0.5;
-                float creviceFactor = saturate(curvature * _CreviceDepth);
-                surfaceColor = lerp(surfaceColor, _CreviceColor.rgb, creviceFactor);
+                float crevice = saturate(curvature * _CreviceDepth);
+                surfaceColor = lerp(surfaceColor, _CreviceColor.rgb, crevice);
 
-                // 5. Pastel SSS Fresnel Glow
+                // 6. Warm Pastel Fresnel Glow (Soft Living-Vinyl SSS)
                 float NdotV = 1.0 - saturate(dot(normalWS, viewDirWS));
                 float fresnel = pow(NdotV, _FresnelPower) * _FresnelIntensity;
                 float3 rimGlow = _FresnelColor.rgb * fresnel;
 
-                // 6. Final Color Blend
+                // 7. Final Composite
                 float3 finalColor = (surfaceColor * mainLight.color.rgb) + rimGlow;
                 return half4(finalColor, 1.0);
             }
@@ -190,7 +203,7 @@ Shader "AnatoMe/CozyToonSurface"
         }
 
         // ========================================================
-        // PASS 3: SHADOW CASTER (Supports Dither Dissolve)
+        // PASS 3: SHADOW CASTER
         // ========================================================
         Pass
         {
