@@ -150,35 +150,40 @@ h1, h2, .brand-title, .mobile-brand {
   border-top: 1px solid var(--line);
   padding-top: 18px;
   display: grid;
-  gap: 10px;
+  gap: 6px;
 }
 
-.muted { font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; font-weight: 700; }
-
-.lang-toggle {
-  background: #F0ECE6;
-  border-radius: 24px;
-  padding: 4px;
+.pro-badge {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  background: var(--brand-blue-light);
+  border: 1px solid #D6E4F0;
+  border-radius: var(--radius-pill);
+  padding: 6px 12px;
 }
 
-.lang-choice {
-  flex: 1;
-  background: transparent;
-  border: 0;
-  color: var(--text-muted);
-  padding: 7px 8px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
-  transition: all 0.15s ease;
+.pro-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-blue);
+  box-shadow: 0 0 8px rgba(91, 123, 166, 0.4);
 }
 
-.lang-choice.selected {
-  background: #FFFFFF;
+.pro-text {
+  font-size: 9px;
+  font-weight: 800;
   color: var(--brand-blue);
-  box-shadow: var(--shadow-sm);
+  letter-spacing: 0.08em;
+}
+
+.pro-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin: 0;
+  padding-left: 4px;
 }
 
 /* MAIN CONTENT */
@@ -1004,21 +1009,6 @@ h1, h2, .brand-title, .mobile-brand {
   pointer-events: none;
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
-
-/* RTL SUPPORT */
-[dir="rtl"] .sidebar { inset: 0 0 0 auto; border-right: 0; border-left: 1px solid var(--line); }
-[dir="rtl"] .main-wrap { margin-left: 0; margin-right: 270px; }
-[dir="rtl"] .nav-link { text-align: right; }
-[dir="rtl"] .nav-link > span:first-child { order: 2; }
-[dir="rtl"] .card-top, [dir="rtl"] .welcome-row, [dir="rtl"] .section-heading { direction: rtl; }
-[dir="rtl"] .atlas-meta { float: left; }
-[dir="rtl"] .lesson-footer { direction: rtl; }
-[dir="rtl"] .topbar-right { direction: rtl; }
-[dir="rtl"] .content { text-align: right; }
-[dir="rtl"] .journey-unit { direction: rtl; }
-[dir="rtl"] .explore-layout { direction: rtl; }
-[dir="rtl"] .footer { direction: rtl; }
-[dir="rtl"] .peel-slider-wrap { right: auto; left: 12px; }
 
 /* RESPONSIVE */
 @media (max-width: 960px) {

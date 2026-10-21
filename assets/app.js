@@ -1,18 +1,10 @@
-// AnatoMe Interactive Engine
+// AnatoMe Interactive Engine — Pure English Medical Edition
 const titles = [
   "Anatomical Language & Planes", "The Skeletal Framework", "Joints & Kinesiology",
   "Muscle Foundations & Fiber Types", "The Shoulder Complex", "The Arm & Forearm",
   "The Hand & Precision Grip", "The Vertebral Column", "The Core Stabilizers",
   "The Pelvis & Hip Joint", "The Thigh & Femoral Mechanics", "The Knee & Ligamentous Stability",
   "The Lower Leg & Kinetic Chains", "The Foot & Longitudinal Arches", "Review & Clinical Integration"
-];
-
-const titlesHe = [
-  "שפה אנטומית ומישורי תנועה", "מערכת השלד והעצמות", "מפרקים וקינזיולוגיה",
-  "יסודות השריר וסוגי סיבים", "מכלול חגורת הכתף", "הזרוע והאמה",
-  "כף היד ושורש כף היד", "עמוד השדרה והיציבה", "שרירי הליבה ומייצבי הגו",
-  "אגן הירכיים ומפרק הירך", "הירך ומכניקת התנועה", "הברך ומערך הרצועות",
-  "השוק והשרשרת הקינטית", "כף הרגל וקשתות הדריכה", "חזרה ואינטגרציה קלינית"
 ];
 
 const descriptions = [
@@ -68,12 +60,12 @@ function playCozySound(type = 'pop') {
       });
     }
   } catch (e) {
-    // Audio context not allowed or not supported; fail gracefully
+    // Fail silently if audio context not permitted
   }
 }
 
 // Persistent State
-const state = JSON.parse(localStorage.getItem('anatome-progress') || '{"days":0,"xp":0,"streak":0,"lastDate":"","lessonProgress":0,"lang":"en","completed":[]}');
+const state = JSON.parse(localStorage.getItem('anatome-progress-v2') || '{"days":0,"xp":0,"streak":0,"lastDate":"","lessonProgress":0,"completed":[]}');
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
@@ -84,7 +76,7 @@ let isIsolated = false;
 let isPlayingAction = false;
 
 function save() {
-  localStorage.setItem('anatome-progress', JSON.stringify(state));
+  localStorage.setItem('anatome-progress-v2', JSON.stringify(state));
   renderStats();
 }
 
@@ -112,7 +104,7 @@ function renderStats() {
   $('#journey-percent').textContent = Math.round(state.days / 60 * 100) + '%';
 
   const titleIdx = Math.min(state.days, titles.length - 1);
-  $('#lesson-title').textContent = (state.lang === 'he' ? titlesHe : titles)[titleIdx];
+  $('#lesson-title').textContent = titles[titleIdx];
   $('#lesson-subtitle').textContent = descriptions[titleIdx];
 
   renderWeek();
@@ -121,7 +113,7 @@ function renderStats() {
 
 function renderWeek() {
   const el = $('#week-strip');
-  const days = state.lang === 'he' ? ['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'] : ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+  const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
   el.innerHTML = days.map((d, i) => {
     const isToday = i === new Date().getDay() - 1;
     const isDone = i < state.streak;
@@ -129,7 +121,7 @@ function renderWeek() {
       <div class="week-day ${isToday ? 'today' : ''} ${isDone ? 'done' : ''}">
         <span>${d}</span>
         <b>${isDone ? '✓' : i + 1}</b>
-        <small>${isToday ? (state.lang === 'he' ? 'היום' : 'TODAY') : (state.lang === 'he' ? 'יום' : 'DAY')}</small>
+        <small>${isToday ? 'TODAY' : 'DAY'}</small>
       </div>`;
   }).join('');
 }
@@ -158,11 +150,11 @@ function renderJourney() {
       <article class="journey-unit ${current ? 'current' : ''}">
         <div class="unit-number">${done ? '✓' : String(i + 1).padStart(2, '0')}</div>
         <div class="unit-copy">
-          <h3>${state.lang === 'he' ? titlesHe[Math.min(i, titlesHe.length - 1)] : u[0]}</h3>
-          <p>${state.lang === 'he' ? `ימים ${n}–${n + 5} · ` : ''}${u[1]}</p>
+          <h3>${u[0]}</h3>
+          <p>${u[1]}</p>
         </div>
-        <span class="unit-status">${done ? (state.lang === 'he' ? 'הושלם' : 'COMPLETE') : current ? (state.lang === 'he' ? 'כעת' : 'IN PROGRESS') : (state.lang === 'he' ? `ימים ${n}–${n + 5}` : `DAYS ${n}–${n + 5}`)}</span>
-        <button class="unit-action" data-unit="${i}">${current ? (state.lang === 'he' ? 'המשך' : 'OPEN') : (done ? (state.lang === 'he' ? 'חזרה' : 'REVIEW') : 'VIEW')}</button>
+        <span class="unit-status">${done ? 'COMPLETE' : current ? 'IN PROGRESS' : `DAYS ${n}–${n + 5}`}</span>
+        <button class="unit-action" data-unit="${i}">${current ? 'OPEN' : done ? 'REVIEW' : 'VIEW'}</button>
       </article>`;
   }).join('');
 
@@ -172,7 +164,7 @@ function renderJourney() {
       go('home');
       $('#continue-button').focus();
     } else {
-      toast(state.lang === 'he' ? 'השלימו את השלב הנוכחי כדי לפתוח את הבא.' : 'Complete your current unit to unlock the next one.');
+      toast('Complete your current unit to unlock the next one.');
     }
   });
 }
@@ -183,7 +175,7 @@ function go(next) {
   $$('.view').forEach(v => v.classList.toggle('hidden', v.id !== `view-${next}`));
   $$('.nav-link').forEach(b => b.classList.toggle('active', b.dataset.view === next));
   if (next === 'explore') {
-    $('#region-title').textContent = currentRegion ? regionNames[currentRegion][state.lang] : (state.lang === 'he' ? 'בחרו מבנה אנטומי' : 'Select an Organ');
+    $('#region-title').textContent = currentRegion ? regionNames[currentRegion] : 'Select an Organ';
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -214,169 +206,61 @@ $('#continue-button').onclick = () => {
         state.lastDate = today;
         state.lessonProgress = 0;
       }
-      toast(state.lang === 'he' ? '✦ שיעור הושלם! כל הכבוד, צברת 25 XP!' : '✦ Lesson complete! Fantastic work, +25 XP!');
+      toast('✦ Lesson complete! Fantastic work, +25 XP!');
     } else {
-      toast(state.lang === 'he' ? `התקדמות בשיעור: ${state.lessonProgress}%` : `Lesson progress: ${state.lessonProgress}%`);
+      toast(`Lesson progress: ${state.lessonProgress}%`);
     }
     save();
   }
 };
 
-$('#top-lang').onclick = () => setLang(state.lang === 'en' ? 'he' : 'en');
-$$('.lang-choice').forEach(b => b.onclick = () => setLang(b.dataset.lang));
-
-function setLang(lang) {
-  playCozySound('pop');
-  state.lang = lang;
-  $$('.region-point').forEach(p => p.setAttribute('aria-label', regionNames[p.dataset.region][lang]));
-  document.documentElement.lang = lang;
-  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
-  $$('[data-en]').forEach(el => el.textContent = el.dataset[lang]);
-  $$('.lang-choice').forEach(el => el.classList.toggle('selected', el.dataset.lang === lang));
-  $('#top-lang').textContent = lang === 'en' ? '🇮🇱 עב' : '🇺🇸 EN';
-  renderStats();
-  if (currentRegion) selectRegion(currentRegion);
-  save();
-}
-
-// Complete Medical Data Structures
-const regionData = {
-  shoulders: {
-    latin: "Musculi cinguli pectoralis (Deltoideus & Rotator Cuff)",
-    enName: "Shoulder Girdle & Rotator Cuff",
-    heName: "חגורת הכתף ושרירי השרוול המסובב",
-    structures: ["Deltoid", "Supraspinatus", "Infraspinatus", "Teres Minor", "Subscapularis"],
-    origins: [
-      { bone: "Clavicle (lateral 1/3), Acromion, Scapular Spine", landmark: "Deltoid origin", type: "origin" },
-      { bone: "Supraspinous fossa of scapula", landmark: "Supraspinatus origin", type: "origin" }
-    ],
-    insertions: [
-      { bone: "Humerus (Deltoid Tuberosity)", landmark: "Deltoid insertion", type: "insertion" },
-      { bone: "Greater tubercle of humerus", landmark: "Rotator cuff insertion", type: "insertion" }
-    ],
-    actions: ["Abduction (0°-15° Supraspinatus, 15°-90° Deltoid)", "External & Internal Rotation", "Glenohumeral dynamic stabilization"],
-    actionsHe: ["הרחקה (0°-15° סופראספינטוס, 15°-90° דלטואיד)", "סיבוב חיצוני ופנימי של הזרוע", "ייצוב דינמי של ראש עצם הזרוע במפרק"],
-    innervation: "Axillary nerve (C5, C6) & Suprascapular nerve (C5, C6)",
-    kinesiologyNote: "The rotator cuff pulls the humeral head inferomedially into the glenoid cavity to prevent superior impingement during abduction.",
-    kinesiologyNoteHe: "שרירי השרוול המסובב מהדקים את ראש הזרוע למשטח המפרקי למניעת צביטה בזמן הרמת היד."
-  },
-  chest: {
-    latin: "Musculus pectoralis major et minor",
-    enName: "Pectoral Region & Thoracic Wall",
-    heName: "אזור החזה ושרירי בית החזה",
-    structures: ["Pectoralis Major", "Pectoralis Minor", "Subclavius", "Serratus Anterior"],
-    origins: [
-      { bone: "Clavicle (medial half) & Sternum / Ribs 1-6", landmark: "Clavicular & sternocostal heads", type: "origin" }
-    ],
-    insertions: [
-      { bone: "Humerus (Lateral lip of bicipital groove)", landmark: "Crest of greater tubercle", type: "insertion" }
-    ],
-    actions: ["Adduction & Medial Rotation of humerus", "Horizontal adduction (pushing mechanics)", "Deep inspiration accessory"],
-    actionsHe: ["קירוב וסיבוב פנימי של הזרוע", "דחיפה לפנים", "שריר עזר לשאיפה עמוקה"],
-    innervation: "Lateral & Medial pectoral nerves (C5-T1)",
-    kinesiologyNote: "Serratus anterior pairs with the trapezius for upward rotation of the scapula, preventing scapular winging.",
-    kinesiologyNoteHe: "הסראטוס אנטריור פועל בסינרגיה עם הטרפז לשמירה על הצמדת השכמה לצלעות."
-  },
-  arms: {
-    latin: "Musculi brachii & antebrachii",
-    enName: "Arm & Forearm Kinetic Chain",
-    heName: "הזרוע והאמה",
-    structures: ["Biceps Brachii", "Brachialis", "Triceps Brachii", "Brachioradialis"],
-    origins: [
-      { bone: "Scapula (Supraglenoid & Coracoid process)", landmark: "Long & short heads of Biceps", type: "origin" },
-      { bone: "Scapula & Posterior Humerus", landmark: "Triceps 3 heads", type: "origin" }
-    ],
-    insertions: [
-      { bone: "Radius (Radial tuberosity)", landmark: "Biceps insertion & bicipital aponeurosis", type: "insertion" },
-      { bone: "Ulna (Olecranon process)", landmark: "Triceps insertion", type: "insertion" }
-    ],
-    actions: ["Elbow Flexion & Extension", "Forearm Supination (Biceps)", "Shoulder Flexion stabilization"],
-    actionsHe: ["כיפוף ויישור המרפק", "סופינציה (סיבוב האמה כלפי מעלה)", "ייצוב קדמי של הכתף"],
-    innervation: "Musculocutaneous nerve (C5-C7) & Radial nerve (C5-T1)",
-    kinesiologyNote: "Biceps is the most powerful supinator of the flexed forearm, utilizing the radial tuberosity as a high-torque pulley.",
-    kinesiologyNoteHe: "הבייספס הוא הסופינטור החזק ביותר של האמה כאשר המרפק כפוף."
-  },
-  core: {
-    latin: "Musculi abdominis & stabilisatores trunci",
-    enName: "Abdominal Core & Lumbar Stabilizers",
-    heName: "שרירי הליבה ומייצבי הגו",
-    structures: ["Rectus Abdominis", "External Oblique", "Internal Oblique", "Transversus Abdominis", "Multifidus"],
-    origins: [
-      { bone: "Pubic crest & symphysis", landmark: "Pubic crest attachment", type: "origin" },
-      { bone: "Iliac crest & Thoracolumbar fascia", landmark: "Deep transverse belt", type: "origin" }
-    ],
-    insertions: [
-      { bone: "Xiphoid process & Costal cartilages 5-7", landmark: "Sternal ribs", type: "insertion" },
-      { bone: "Linea alba & Pubic pecten", landmark: "Anterior aponeurosis", type: "insertion" }
-    ],
-    actions: ["Trunk Flexion & Lateral rotation", "Intra-abdominal pressure modulation", "Lumbar spine shear protection"],
-    actionsHe: ["כיפוף הגו ורוטציה", "ויסות לחץ תוך-בטני לייצוב הגב", "הגנה על חוליות מותניות"],
-    innervation: "Thoracoabdominal nerves (T7-T11) & Subcostal nerve (T12)",
-    kinesiologyNote: "Transversus abdominis acts like an anatomical corset, pre-activating 30ms before limb movements to protect the spine.",
-    kinesiologyNoteHe: "הטרנסברסוס פועל כמחוך טבעי המתכווץ לפני תנועות גפיים לייצוב עמוד השדרה."
-  },
-  legs: {
-    latin: "Musculi femoris & cruris",
-    enName: "Thigh & Lower Leg Complex",
-    heName: "הירך, השוק ושרשרת הדריכה",
-    structures: ["Quadriceps Femoris", "Hamstrings group", "Gastrocnemius", "Soleus", "Tibialis Anterior"],
-    origins: [
-      { bone: "Anterior Inferior Iliac Spine (AIIS) & Femoral shaft", landmark: "Rectus femoris & vasti", type: "origin" },
-      { bone: "Ischial tuberosity", landmark: "Hamstrings origin (sit bone)", type: "origin" }
-    ],
-    insertions: [
-      { bone: "Tibia (Tibial Tuberosity via Patellar tendon)", landmark: "Quadriceps insertion", type: "insertion" },
-      { bone: "Calcaneus via Achilles tendon", landmark: "Triceps surae insertion", type: "insertion" }
-    ],
-    actions: ["Knee Extension & Flexion", "Hip Flexion & Extension", "Plantarflexion (Achilles) & Dorsiflexion (Tibialis)"],
-    actionsHe: ["יישור וכיפוף הברך", "יישור וכיפוף הירך", "פשיטה דורסלית ופלאנטרית של כף הרגל"],
-    innervation: "Femoral nerve (L2-L4), Sciatic nerve (L4-S3) & Tibial nerve",
-    kinesiologyNote: "The patella increases the mechanical leverage (moment arm) of the quadriceps muscle by up to 30%.",
-    kinesiologyNoteHe: "פיקת הברך מרחיקה את גיד הארבע-ראשי מציר התנועה ומגדילה את מומנט הכוח ב-30%."
-  }
+const regionNames = {
+  shoulders: "Shoulder Girdle & Rotator Cuff",
+  chest: "Chest & Thoracic Wall",
+  arms: "Arm & Forearm Kinetic Chain",
+  core: "Abdominal & Lumbar Stabilizers",
+  legs: "Thigh, Knee & Lower Leg"
 };
 
-const regionNames = {
-  shoulders: { en: "Shoulder Girdle & Rotator Cuff", he: "חגורת הכתף והשרוול המסובב" },
-  chest: { en: "Chest & Anterior Thorax", he: "אזור החזה ושרירי הנשימה" },
-  arms: { en: "Arm & Forearm Chain", he: "הזרוע והאמה" },
-  core: { en: "Abdominal & Lumbar Core", he: "שרירי הליבה ועמוד השדרה" },
-  legs: { en: "Thigh, Knee & Calves", he: "ירכיים, ברכיים ושוקיים" }
+const regionRegistryMap = {
+  shoulders: "shoulder",
+  chest: "chest",
+  arms: "arm",
+  core: "core",
+  legs: "hipAndThigh"
 };
 
 function selectRegion(key) {
   playCozySound('pop');
   currentRegion = key;
-  const data = regionData[key];
-  const isHe = state.lang === 'he';
+  const regKey = regionRegistryMap[key] || "shoulder";
+  const muscles = (typeof ANATOMY_REGISTRY !== 'undefined' && ANATOMY_REGISTRY.muscles[regKey]) ? ANATOMY_REGISTRY.muscles[regKey] : [];
 
-  $('#region-title').textContent = regionNames[key][state.lang];
-  $('#region-latin').textContent = data.latin;
-  $('#region-description').textContent = isHe ? data.kinesiologyNoteHe : data.kinesiologyNote;
+  $('#region-title').textContent = regionNames[key];
+  $('#region-latin').textContent = muscles[0] ? muscles[0].latin : "Systema Musculoskeletale";
+  $('#region-description').textContent = `Clinical region containing ${muscles.length} primary muscles and their articulated skeletal attachments.`;
 
-  $('#region-content').innerHTML = `
-    <div class="detail-group">
-      <h3>${isHe ? 'מבנים עיקריים' : 'KEY MUSCLES & STRUCTURES'}</h3>
-      ${data.structures.map(n => `<span class="structure-chip">${n}</span>`).join('')}
-    </div>
-    <div class="detail-group">
-      <h3>${isHe ? 'נקודות מוצא (ORIGIN) — פין מנטה' : 'ORIGIN ANCHORS (TURQUOISE MINT PEGS)'}</h3>
-      ${data.origins.map(o => `<div class="anchor-chip origin">● ${o.bone} (${o.landmark})</div>`).join('')}
-    </div>
-    <div class="detail-group">
-      <h3>${isHe ? 'נקודות אחיזה (INSERTION) — פין צהוב' : 'INSERTION ANCHORS (BUTTER YELLOW PEGS)'}</h3>
-      ${data.insertions.map(i => `<div class="anchor-chip insertion">● ${i.bone} (${i.landmark})</div>`).join('')}
-    </div>
-    <div class="detail-group">
-      <h3>${isHe ? 'פעולות קינזיולוגיות' : 'KINESIOLOGICAL ACTIONS'}</h3>
-      ${(isHe ? data.actionsHe : data.actions).map(a => `<div class="structure-chip">${a}</div>`).join('')}
-    </div>
-    <div class="detail-group">
-      <h3>${isHe ? 'עצבוב קליני' : 'CLINICAL INNERVATION'}</h3>
-      <p class="region-description">${data.innervation}</p>
-    </div>
-  `;
+  let contentHTML = '';
+  muscles.forEach(m => {
+    contentHTML += `
+      <div class="detail-group">
+        <h3 style="display:flex; justify-content:space-between; align-items:center;">
+          <span>${m.english.toUpperCase()}</span>
+          <span style="font-size:9px; background:#F0ECE6; padding:2px 8px; border-radius:10px; color:#5B7BA6;">Layer ${m.layer} (${m.layer === 1 ? 'Deep' : 'Superficial'})</span>
+        </h3>
+        <p style="font-family:'Lora',serif; font-style:italic; font-size:12px; color:#5B7BA6; margin:0 0 6px;">${m.latin}</p>
+        <div class="anchor-chip origin">● Origin: ${m.origin}</div>
+        <div class="anchor-chip insertion">● Insertion: ${m.insertion}</div>
+        <div style="margin-top:6px;">
+          ${m.actions.map(a => `<span class="structure-chip">${a}</span>`).join('')}
+        </div>
+        <p style="font-size:11px; color:#7E8494; margin:6px 0 0;"><strong>Innervation:</strong> ${m.innervation}</p>
+      </div>
+      <hr style="border:0; border-top:1px dashed #EBE6DF; margin:14px 0;">
+    `;
+  });
 
+  $('#region-content').innerHTML = contentHTML;
   $$('.region-point').forEach(p => p.classList.toggle('selected', p.dataset.region === key));
 }
 
@@ -388,8 +272,8 @@ $$('.body-tab').forEach(b => b.onclick = () => {
   const back = b.dataset.viewbody === 'back';
   $$('.body-tab').forEach(x => x.classList.toggle('selected', x === b));
   $('.body-figure').classList.toggle('back', back);
-  $('#figure-caption').textContent = back ? (state.lang === 'he' ? 'מבט אחורי' : 'POSTERIOR VIEW') : (state.lang === 'he' ? 'מבט קדמי' : 'ANTERIOR VIEW');
-  toast(back ? (state.lang === 'he' ? 'מבט אחורי' : 'Posterior view active') : (state.lang === 'he' ? 'מבט קדמי' : 'Anterior view active'));
+  $('#figure-caption').textContent = back ? 'POSTERIOR VIEW' : 'ANTERIOR VIEW';
+  toast(back ? 'Posterior view active' : 'Anterior view active');
 });
 
 // Chunky Layer Peeling Slider Controller
@@ -405,15 +289,15 @@ $$('.peel-step').forEach(btn => {
 
     if (layer === 0) {
       figure.classList.add('layer-skeleton-only');
-      toast(state.lang === 'he' ? 'שכבה 0: שלד מלא ועצמות' : 'Layer 0: Complete Skeleton & Bones');
+      toast('Layer 0: Complete Skeleton (206 Bones)');
     } else if (layer === 1) {
       figure.classList.add('layer-deep-only');
-      toast(state.lang === 'he' ? 'שכבה 1: שרירים עמוקים ומייצבים' : 'Layer 1: Deep Stabilizing Muscles');
+      toast('Layer 1: Deep Muscles & Stabilizers');
     } else if (layer === 2) {
       figure.classList.add('layer-superficial-only');
-      toast(state.lang === 'he' ? 'שכבה 2: שרירים שטחיים ותנועתיים' : 'Layer 2: Superficial Movers');
+      toast('Layer 2: Superficial Movers');
     } else {
-      toast(state.lang === 'he' ? 'שכבה 3: שכבת מעטפת הגוף' : 'Layer 3: Skin & Silhouette Outline');
+      toast('Layer 3: Skin & Silhouette Outline');
     }
   };
 });
@@ -421,7 +305,7 @@ $$('.peel-step').forEach(btn => {
 // Kinesiology Action Play Button
 $('#action-play-btn').onclick = () => {
   if (!currentRegion) {
-    toast(state.lang === 'he' ? 'אנא בחרו איבר או שריר קודם.' : 'Please select an anatomical region first.');
+    toast('Please select an anatomical region first.');
     return;
   }
   isPlayingAction = !isPlayingAction;
@@ -432,17 +316,17 @@ $('#action-play-btn').onclick = () => {
   if (isPlayingAction) {
     figure.style.transform = 'scale(1.04)';
     figure.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-    toast(state.lang === 'he' ? '✦ מפעיל תנועה קינזיולוגית: כיווץ שריר ומסלול כוח' : '✦ Kinesiology Action: Muscle shortening & force vector');
+    toast('✦ Kinesiology Action: Muscle shortening & mechanical force loop');
   } else {
     figure.style.transform = 'scale(1)';
-    toast(state.lang === 'he' ? 'תנועה הסתיימה' : 'Action loop paused');
+    toast('Action loop paused');
   }
 };
 
 // Isolation Mode Button
 $('#action-isolate-btn').onclick = () => {
   if (!currentRegion) {
-    toast(state.lang === 'he' ? 'אנא בחרו איבר או שריר קודם.' : 'Please select an anatomical region first.');
+    toast('Please select an anatomical region first.');
     return;
   }
   isIsolated = !isIsolated;
@@ -454,11 +338,11 @@ $('#action-isolate-btn').onclick = () => {
   if (isIsolated) {
     muscles.forEach(m => m.style.opacity = '0.15');
     bones.forEach(b => b.style.opacity = '0.35');
-    toast(state.lang === 'he' ? '⊞ מצב בידוד: רק המבנה והעצמות הרלוונטיות מוצגים' : '⊞ Isolation Mode: Solitary focus on active structures');
+    toast('⊞ Isolation Mode: Solitary focus on active structures');
   } else {
     muscles.forEach(m => m.style.opacity = '');
     bones.forEach(b => b.style.opacity = '');
-    toast(state.lang === 'he' ? 'מצב בידוד בוטל' : 'Isolation exited');
+    toast('Isolation exited');
   }
 };
 
@@ -472,7 +356,7 @@ $('#reset-progress').onclick = () => {
   state.lessonProgress = 0;
   state.completed = [];
   save();
-  toast(state.lang === 'he' ? 'ההתקדמות המקומית אופסה.' : 'Local progress reset.');
+  toast('Local progress reset.');
 };
 
 $('#mobile-menu').onclick = () => {
@@ -482,4 +366,3 @@ $('#mobile-menu').onclick = () => {
 
 // Initialize
 renderStats();
-setLang(state.lang);
