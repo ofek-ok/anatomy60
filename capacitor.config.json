@@ -1,5 +1,9 @@
 {
   "appId": "com.anatome.app",
   "appName": "AnatoMe",
-  "webDir": "public"
+  "webDir": "public",
+  "server": {
+    "url": "https://anatomy60.vercel.app",
+    "cleartext": false
+  }
 }
